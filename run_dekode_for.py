@@ -65,7 +65,7 @@ if __name__ == "__main__":
 	
 	# The following are the first 9 n-type TCO's
 	amobt_path = '/research-projects/partita/faghaniniaa/current_jobs/carrier_scattering/VERSIONS/latest_aMoBT/'
-	scripts_path = '~/scripts/dekode_scripts/'
+	scripts_path = '~/dekode/'
 	potcar_path = '/cluster/caml/vasp-pot/PBE/'
 
 	list1 = ['mp-5966', 'mp-22598', 'mp-19803', 'mp-29213', 'mp-22323', 'mp-22189', 'mp-31132', 'mp-8275', 'mp-13334', 'mp-3443', 'mp-3810', 'mp-16281']
