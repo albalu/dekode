@@ -65,7 +65,7 @@ if __name__ == "__main__":
 	
 	# The following are the first 9 n-type TCO's
 	amobt_path = '/research-projects/partita/faghaniniaa/current_jobs/carrier_scattering/VERSIONS/latest_aMoBT/'
-	scripts_path = '~/scripts/dekode_scripts/'
+	scripts_path = '~/dekode/'
 	potcar_path = '/cluster/caml/vasp-pot/PBE/'
 
 	list1 = ['mp-5966', 'mp-22598', 'mp-19803', 'mp-29213', 'mp-22323', 'mp-22189', 'mp-31132', 'mp-8275', 'mp-13334', 'mp-3443', 'mp-3810', 'mp-16281']
@@ -125,8 +125,8 @@ if __name__ == "__main__":
 	parser.add_argument("-pa","--mp_id", help="The Materials Project ID", required = False)
 	args = parser.parse_args()
 
-#	run_dekode_for(famous_p_2, potcar_path, amobt_path, scripts_path, GEOM = True, SELF = True, NSELF = True, \
-#	NSELF_AMOBT = True, DIEL = True, PHONON = True, DEFORM = True, AMOBT = True, SOC = False)
+	run_dekode_for(halides_1, potcar_path, amobt_path, scripts_path, GEOM = True, SELF = True, NSELF = True, \
+	NSELF_AMOBT = True, DIEL = True, PHONON = True, DEFORM = True, AMOBT = True, SOC = False)
 
 #	run_dekode_for(['mp-7831', 'mp-541368', 'mp-22734', 'mp-7863', 'mp-3744', 'mp-7502', 'mp-7233', 'mp-5709'], potcar_path, amobt_path, scripts_path, GEOM = False, SELF = False, NSELF = False, \
 #	NSELF_AMOBT = False, DIEL = False, PHONON = False, DEFORM = False, AMOBT = True, SOC = False)

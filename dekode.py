@@ -46,7 +46,7 @@ incar = "default"
 aMoBT = "FALSE"
 SOC = "False"
 aMoBT_path = "/research-projects/partita/faghaniniaa/current_jobs/carrier_scattering/VERSIONS/latest_aMoBT/"
-scripts_path = "/home/research/alireza/scripts/dekode_scripts"
+scripts_path = "~/dekode"
 
 with open('MIKECAR', "r") as f:
     for line in f:
