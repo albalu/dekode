@@ -152,10 +152,11 @@ from pymatgen.matproj.rest import MPRester
 matproj = MPRester(apikey)
 with open('DATA_ALL.txt', 'w') as data:
 #	data.write('%12s %12s %9s %22s %22s %7s %7s %7s %8s %8s %8s %8s %16s %16s %11s \n' % ('MP-ID', 'Formula', 'gap(eV)', 'n-cond_' + stn + '_' + str(T) + 'K', 'p-cond_' + stn + '_' + str(T) + 'K', 'LO-phon', 'eps_0', 'eps_inf', 'm_e', 'm_h', 'mu_n', 'mu_p', 'time(s)'))
-	data.write('%12s %12s %9s %22s %22s %7s %7s %7s %8s %8s %8s %8s %11s \n' % ('MP-ID', 'Formula', 'gap(eV)', 'n-cond_' + stn + '_' + str(T) + 'K', 'p-cond_' + stn + '_' + str(T) + 'K', \
+	data.write('%12s %12s %12s %5s %12s %9s %22s %22s %7s %7s %7s %8s %8s %8s %8s %11s \n' % ('mp-id', 'formula', 'spacegroup', 'sp#', 'sp-type', 'gap(eV)', 'n-cond_' + stn + '_' + str(T) + 'K', 'p-cond_' + stn + '_' + str(T) + 'K', \
 	'LO-phon', 'eps_0', 'eps_inf', 'm_e', 'm_h', 'mu_n', 'mu_p', 'time(s)'))
 	for id in materials_list:
 		formula = matproj.get_data(id, prop="pretty_formula")[0]["pretty_formula"]
+		spacegroup = matproj.get_data(id, prop="spacegroup")[0]["spacegroup"]
 		if os.path.exists(id):
 			print(id)
 			os.chdir(id)
@@ -173,6 +174,6 @@ with open('DATA_ALL.txt', 'w') as data:
 
 			os.chdir('../')
 #			data.write('%12s %12s %9.2f %22.2f %22.2f %7.2f %7.2f %7.2f %8.4f %8.4f %8.2f %8.2f %16.2f %16.2f %11.2f \n' % (id, formula, econ - eval, conductivity_n, conductivity_p, LO_phonon,  static_dielectric, highf_dielectric, m_n, m_h, mobility_n, mobility_p, thermopower_n, thermopower_p, t_tot))
-			data.write('%12s %12s %9.2f %22.2f %22.2f %7.2f %7.2f %7.2f %8.4f %8.4f %8.2f %8.2f %11.2f \n' % \
-			(id, formula, econ - eval, conductivity_n, conductivity_p, LO_phonon,  static_dielectric, \
+			data.write('%12s %12s %12s %5s %12s %9.2f %22.2f %22.2f %7.2f %7.2f %7.2f %8.4f %8.4f %8.2f %8.2f %11.2f \n' % \
+			(id, formula, spacegroup['symbol'], spacegroup['number'], spacegroup['crystal_system'], econ - eval, conductivity_n, conductivity_p, LO_phonon,  static_dielectric, \
 			highf_dielectric, m_n, m_h, mobility_n, mobility_p, t_tot))

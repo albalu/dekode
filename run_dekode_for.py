@@ -65,7 +65,7 @@ if __name__ == "__main__":
 	
 	# The following are the first 9 n-type TCO's
 	amobt_path = '/research-projects/partita/faghaniniaa/current_jobs/carrier_scattering/VERSIONS/latest_aMoBT/'
-	scripts_path = '~/dekode/'
+	scripts_path = '~/scripts/dekode_scripts/'
 	potcar_path = '/cluster/caml/vasp-pot/PBE/'
 
 	list1 = ['mp-5966', 'mp-22598', 'mp-19803', 'mp-29213', 'mp-22323', 'mp-22189', 'mp-31132', 'mp-8275', 'mp-13334', 'mp-3443', 'mp-3810', 'mp-16281']
@@ -90,6 +90,7 @@ if __name__ == "__main__":
 	famous_p = ['mp-10695', 'mp-560588', 'mp-3748', 'mp-3098', 'mp-4979']	# ZnS_2, CuAlO2_2, CuAlS2
 	famous_p_2 = ['mp-5970', 'mp-4255', 'mp-19281', 'mp-19357', 'mp-18841']	# BaCu2S2_2, SrxLa1-xCrO3_3
 
+	halides_1 = ['mp-22922', 'mp-22914', 'mp-22913', 'mp-32880','mp-614013', 'mp-616378', 'mp-568570', 'mp-2068']   # p: AgCl, CuCl, CuBr_2  n: CsSnI3_3, RhF3
 # mp-21905, mp-3331 and mp-29047 don't exist on MP website
 	so_list = ['mp-8298', 'mp-8299', 'mp-7787', 'mp-19845', 'mp-8789', 'mp-3519']
 #	materials_list = list1 + list2 + list3 + list4 + list5 + list6 + list7
@@ -117,7 +118,6 @@ if __name__ == "__main__":
 
 
 # List of manuals: 
-
 #		'mp-21905'
 #		'mp-13973'
 
