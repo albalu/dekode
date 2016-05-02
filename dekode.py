@@ -142,30 +142,29 @@ def get_POTCAR(potcar_path, potcar_labels = ''):
 	echoline = "cat "
 	if potcar_labels == '':
 		c = 0
-		with open('POSCAR', "rU") as f:
+		with open('POSCAR', 'r') as f:
 			for line in f:
-				c = c + 1
+				c += 1
 				if c == 6:
 					potcar_labels = line.split()
 				elif c > 6:
 					break
-	else:
-		print(potcar_labels)
-		for label in potcar_labels:
-			if os.path.isfile(potcar_path + label + '/POTCAR'):
-				echoline += potcar_path + label + '/POTCAR '
-			elif os.path.isfile(potcar_path + label + '/POTCAR' + '_d'):
-				echoline += potcar_path + label + '_d' + '/POTCAR '
-			elif os.path.isfile(potcar_path + label + '/POTCAR' + '_sv'):
-				echoline += potcar_path + label + '_sv' + '/POTCAR '
-			elif os.path.isfile(potcar_path + label + '_h' + '/POTCAR'):
-				echoline += potcar_path + label + '_h' + '/POTCAR '
-			elif os.path.isfile(potcar_path + label + '_s' + '/POTCAR'):
-				echoline += potcar_path + label + '_s' + '/POTCAR '
-			elif os.path.isfile(potcar_path + label + '_pv' + '/POTCAR'):
-				echoline += potcar_path + label + '_pv' + '/POTCAR '
-			elif os.path.isfile(potcar_path + label + '_GW' + '/POTCAR'):
-				echoline += potcar_path + label + '_GW' + '/POTCAR '
+	print(potcar_labels)
+	for label in potcar_labels:
+		if os.path.isfile(potcar_path + label + '/POTCAR'):
+			echoline += potcar_path + label + '/POTCAR '
+		elif os.path.isfile(potcar_path + label + '_d' + '/POTCAR'):
+			echoline += potcar_path + label + '_d' + '/POTCAR '
+		elif os.path.isfile(potcar_path + label + '_sv' + '/POTCAR'):
+			echoline += potcar_path + label + '_sv' + '/POTCAR '
+		elif os.path.isfile(potcar_path + label + '_h' + '/POTCAR'):
+			echoline += potcar_path + label + '_h' + '/POTCAR '
+		elif os.path.isfile(potcar_path + label + '_s' + '/POTCAR'):
+			echoline += potcar_path + label + '_s' + '/POTCAR '
+		elif os.path.isfile(potcar_path + label + '_pv' + '/POTCAR'):
+			echoline += potcar_path + label + '_pv' + '/POTCAR '
+		elif os.path.isfile(potcar_path + label + '_GW' + '/POTCAR'):
+			echoline += potcar_path + label + '_GW' + '/POTCAR '
 	echoline += " > POTCAR"
 	os.system(echoline)
 
@@ -335,7 +334,7 @@ def writeINCARgeom(SOC = 'False'):
     h.write("ICHARG = 0\n")
     h.write("ISIF = 3\n")
     h.write("ISMEAR = -5\n")
-    h.write("ISPIN = 1\n")
+    h.write("ISPIN = 2\n")
     h.write("LORBIT = 11\n")
     h.write("LREAL = .FALSE.\n")
     h.write("LWAVE = False\n")
@@ -357,7 +356,7 @@ def writeINCARself(SOC = 'False'):
     h.write("IBRION = -1\n")
     h.write("ICHARG = 2\n")
     h.write("ISMEAR = -5\n")
-    h.write("ISPIN = 1\n")
+    h.write("ISPIN = 2\n")
     h.write("LORBIT = 11\n")
     h.write("LREAL = .FALSE.\n")
     h.write("LWAVE = .TRUE.\n")
@@ -380,7 +379,7 @@ def writeINCARnself(SOC = 'False'):
     h.write("ENCUT = 520\n")
     h.write("IBRION = -1\n")
     h.write("ICHARG = 11\n")
-    h.write("ISPIN = 1\n")
+    h.write("ISPIN = 2\n")
     h.write("LORBIT = 11\n")
     h.write("LREAL = .FALSE.\n")
     h.write("LWAVE = .FALSE.\n")
@@ -421,6 +420,7 @@ def writeINCARphonon():
     h.write('ADDGRID = .TRUE.'                                       +'\n')
     h.write('  LWAVE = .FALSE.'                                      +'\n')
     h.write(' LCHARG = .FALSE.'                                      +'\n')
+    h.write(' ISPIN = 2' 	                                     +'\n')
 
 
 ######################################################################################
@@ -470,6 +470,8 @@ if incar == "default":
 
 if geom in ['TRUE', 'True', 'true']:
     if incar != "default":
+	if ~os.path.exists('POTCAR'):
+		get_POTCAR(potcar_path)
         writeINCARgeom(SOC)
 
     # Make a directory for the files involved in the geometric optimization
