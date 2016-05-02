@@ -536,15 +536,23 @@ if nself in ['TRUE', 'True', 'true']:
     
     
     # Rename KPOINTS_NSELF to KPOINTS so vasp can read it, and retreive the needed files from the self directory
-    os.system('mv KPOINTS_NSELF KPOINTS')
     os.system('cp ./self/POSCAR .')
     os.system('cp ./self/POTCAR .')
     os.system('cp ./self/CHG* .')
 
     # Make a directory for the files involved with the  non-self consistent calcuations
     os.system("mkdir nself")
+    if os.path.exists('KPOINTS_nself'):
+	os.system('mv KPOINTS_nself KPOINTS_NSELF')
+    try:
+    	with open('KPOINTS_NSELF','r') as atest:
+		pass
+    except IOError:
+		raise IOError('KPOINTS_NSELF (line-mode) must be present for the band structure (nself) calculation')
+
+    os.system('mv KPOINTS_NSELF nself/KPOINTS')
     os.system("cp "+y+" nself/")
-    os.system("mv KPOINTS POSCAR POTCAR INCAR CHG* nself/")
+    os.system("mv POSCAR POTCAR INCAR CHG* nself/")
 
     os.chdir("nself/")
     Ksplit()
