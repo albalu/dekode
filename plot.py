@@ -6,7 +6,7 @@ from decimal import *
 import os
 
 os.system("cp ./self/OUTCAR ./nself/EIGENVAL .")
-os.system("cp ~/plot_bandstructure2.m .")
+os.system("cp ~/dekode/plot_bandstructure2.m .")
 os.system("octave -q --eval plot_bandstructure2.m")
 
 while os.path.isfile("axis.mat")== "FALSE":
