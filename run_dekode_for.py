@@ -4,7 +4,7 @@ import os
 import argparse
 import pymatgen as mp
 
-def make_input(id = 'noid', potcar_path, amobt_path, scripts_path, GEOM = False, SELF = False, NSELF = False, NSELF_AMOBT = False, 
+def make_input(potcar_path, amobt_path, scripts_path, id = 'noid',  GEOM = False, SELF = False, NSELF = False, NSELF_AMOBT = False, 
 DIEL = False, PHONON = False, DEFORM = False, AMOBT = False, SOC = False, computer = 'partita'):
 	mp_api_key = 'fDJKEZpxSyvsXdCt'
 	with open('MIKECAR','w') as input:
@@ -62,7 +62,7 @@ False, DIEL = False, PHONON = False, DEFORM = False, AMOBT = False, SOC = False,
 		os.system('cp ~/vasp-ib2.csh ' + id)
 		os.chdir(id)
 #		make_input(id, amobt_path, scripts_path, SOC) #1
-		make_input(id, potcar_path, amobt_path, scripts_path, GEOM, SELF, NSELF, NSELF_AMOBT, DIEL, PHONON, DEFORM, AMOBT, 
+		make_input(potcar_path, amobt_path, scripts_path, id, GEOM, SELF, NSELF, NSELF_AMOBT, DIEL, PHONON, DEFORM, AMOBT, 
 SOC, computer)
 		os.system('rm python_job.*')
 		os.system('qsub partita.sh')
