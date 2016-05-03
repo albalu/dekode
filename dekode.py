@@ -439,6 +439,7 @@ def writeINCARphonon():
 
 
 ####### Identify the correct vasp script to call ##########
+y = 'vasp' # default
 if os.path.isfile("vasp-gpu.csh")==True:
         y = "vasp-gpu.csh"
 if os.path.isfile("vasp-ib2.csh")==True:
