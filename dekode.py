@@ -47,6 +47,7 @@ aMoBT = "FALSE"
 SOC = "False"
 aMoBT_path = "/research-projects/partita/faghaniniaa/current_jobs/carrier_scattering/VERSIONS/latest_aMoBT/"
 scripts_path = "~/dekode"
+computer = 'partita'
 
 with open('MIKECAR', "r") as f:
     for line in f:
@@ -95,6 +96,8 @@ with open('MIKECAR', "r") as f:
 		scripts_path = line[2]
 	elif line[0] == "SOC":
 		SOC = line[2]
+	elif line[0] == "COMPUTER":
+		computer = line[2]
 
 if ~potcar_path.endswith('/'):
 	potcar = potcar_path + '/'
@@ -112,6 +115,14 @@ from run_aMoBT import find_reference
 
 
 ################ Set up nested functions to be used later ##################
+
+def run_vasp(computer = 'partita', y = 'vasp-ib2.csh', ncores = 16):
+	if computer in ['partita', 'Partita', 'PARTITA']:
+		os.system('qsub ' + y)
+	elif computer in ['cori', 'Cori', 'CORI', 'edison', 'Edison', 'EDISON']:
+		os.system('module load vasp')
+		os.system('srun -n ' + str(ncores) + ' vasp_std')
+	return
 
 # This function returns the length of a file
 def file_len(fname):
@@ -481,7 +492,7 @@ if geom in ['TRUE', 'True', 'true']:
     os.chdir("geom/")    
 
     # Now submit the first the job for the first time for geometric optimization
-    os.system("qsub " + y)
+    run_vasp(computer, y)
 
     wait_for_OUTCAR('geom')
 
@@ -513,8 +524,7 @@ if self in ['TRUE', 'True', 'true']:
     os.chdir("self/")         
 
     # Now run the self consistent calculations
-    os.system("qsub " + y)
-
+    run_vasp(computer, y)
 
     wait_for_OUTCAR('self')
 
@@ -558,8 +568,7 @@ if nself in ['TRUE', 'True', 'true']:
     Ksplit()
 
     # Run the non-self consistent calculations
-    os.system("qsub " + y)
-
+    run_vasp(computer, y)
 
     wait_for_OUTCAR('nself')
 
@@ -598,7 +607,7 @@ if nself_aMoBT in ['TRUE', 'True', 'true']:
     os.chdir("nself_aMoBT/")
 
     # Run the non-self consistent calculations
-    os.system("qsub " + y)
+    run_vasp(computer, y)
 
     if val_kpoint != con_kpoint:
 	os.chdir("../")
@@ -607,7 +616,7 @@ if nself_aMoBT in ['TRUE', 'True', 'true']:
 	os.system('cp -r nself_aMoBT p_nself_aMoBT')
 	os.system('mv KPOINTS_aMoBT p_nself_aMoBT/KPOINTS')
 	os.chdir("p_nself_aMoBT")
-	os.system("qsub " + y)
+        run_vasp(computer, y)
 	wait_for_OUTCAR('p_nself_aMoBT')
 	os.chdir("../nself_aMoBT")
 
@@ -641,7 +650,7 @@ if dielectric in ['TRUE', 'True', 'true']:
     			replace('KPOINTS','KPOINTS','Monkhorst','Gamma')
 
     # Now run the self consistent calculations
-    os.system("qsub " + y)
+    run_vasp(computer, y)
 
     wait_for_OUTCAR('dielectric')
 
@@ -781,7 +790,7 @@ if phonon in ['TRUE', 'True', 'true']:
     os.system('mv SPOSCAR POSCAR')
     ###phonopy###
     ###submit###
-    os.system('qsub ' + y)
+    run_vasp(computer, y)
 
     wait_for_OUTCAR('phonopy')
 
@@ -861,7 +870,7 @@ if deform in ['TRUE', 'True', 'true']:
        
     for i in strain:
         os.chdir("part"+str(i)+"/")
-        os.system("qsub " + y)
+	run_vasp(computer, y)
         os.chdir("../")
         done = done + [0]
         finish = finish + [1]

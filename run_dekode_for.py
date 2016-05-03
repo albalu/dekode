@@ -4,7 +4,8 @@ import os
 import argparse
 import pymatgen as mp
 
-def make_input(id, potcar_path, amobt_path, scripts_path, GEOM = False, SELF = False, NSELF = False, NSELF_AMOBT = False, DIEL = False, PHONON = False, DEFORM = False, AMOBT = False, SOC = False):
+def make_input(id = 'noid', potcar_path, amobt_path, scripts_path, GEOM = False, SELF = False, NSELF = False, NSELF_AMOBT = False, 
+DIEL = False, PHONON = False, DEFORM = False, AMOBT = False, SOC = False, computer = 'partita'):
 	mp_api_key = 'fDJKEZpxSyvsXdCt'
 	with open('MIKECAR','w') as input:
 		input.write('EMAIL = alireza@wustl.edu \n')
@@ -18,19 +19,22 @@ def make_input(id, potcar_path, amobt_path, scripts_path, GEOM = False, SELF = F
 		input.write('%s %s \n' % ('DIEL =', DIEL))
 		input.write('%s %s \n' % ('PHONON =', PHONON))
 		api = mp.MPRester(mp_api_key)
-		structure = api.get_structure_by_material_id(id)
-		structure.to(filename="POSCAR")
-		with open('POSCAR','r') as poscar:
-			counter = 0
-			natoms = 0
-			for line in poscar:
-				counter += 1
-				if counter == 7:
-					for i in line.split():
-						natoms += int(i)
-		os.system('rm POSCAR')
-		if natoms < 17:
-			input.write('DIM = 2x2x2 \n')
+		if id not in ['noid']:
+			structure = api.get_structure_by_material_id(id)
+			structure.to(filename="POSCAR")
+			with open('POSCAR','r') as poscar:
+				counter = 0
+				natoms = 0
+				for line in poscar:
+					counter += 1
+					if counter == 7:
+						for i in line.split():
+							natoms += int(i)
+			os.system('rm POSCAR')
+			if natoms < 17:
+				input.write('DIM = 2x2x2 \n')
+			else:
+				input.write('DIM = 1x1x1 \n')
 		else:
 			input.write('DIM = 1x1x1 \n')
 		input.write('%s %s \n' % ('DEFORM =', DEFORM))
@@ -39,11 +43,13 @@ def make_input(id, potcar_path, amobt_path, scripts_path, GEOM = False, SELF = F
 		input.write('INCAR = default \n')
 		input.write('%s %s \n' % ('AMOBT =', AMOBT))
 		input.write('%s %s \n' % ('SOC =', SOC))	
+		input.write('%s %s \n' % ('COMPUTER =', computer))	
 		input.write('%s %s \n' % ('AMOBT_PATH =', amobt_path)) 
 		input.write('%s %s \n' % ('SCRIPTS_PATH =', scripts_path))
 		input.write('%s %s \n' % ('POTCAR_PATH =', potcar_path))
 
-def run_dekode_for(materials_list, potcar_path, amobt_path, scripts_path, GEOM = False, SELF = False, NSELF = False, NSELF_AMOBT = False, DIEL = False, PHONON = False, DEFORM = False, AMOBT = False, SOC = False):
+def run_dekode_for(materials_list, potcar_path, amobt_path, scripts_path, GEOM = False, SELF = False, NSELF = False, NSELF_AMOBT = 
+False, DIEL = False, PHONON = False, DEFORM = False, AMOBT = False, SOC = False, computer = 'partita'):
 	if SOC:
 #		if ~os.path.exists('SOC')
 		os.system('mkdir SOC')
@@ -56,7 +62,8 @@ def run_dekode_for(materials_list, potcar_path, amobt_path, scripts_path, GEOM =
 		os.system('cp ~/vasp-ib2.csh ' + id)
 		os.chdir(id)
 #		make_input(id, amobt_path, scripts_path, SOC) #1
-		make_input(id, potcar_path, amobt_path, scripts_path, GEOM, SELF, NSELF, NSELF_AMOBT, DIEL, PHONON, DEFORM, AMOBT, SOC)
+		make_input(id, potcar_path, amobt_path, scripts_path, GEOM, SELF, NSELF, NSELF_AMOBT, DIEL, PHONON, DEFORM, AMOBT, 
+SOC, computer)
 		os.system('rm python_job.*')
 		os.system('qsub partita.sh')
 		os.chdir('../')
@@ -125,11 +132,11 @@ if __name__ == "__main__":
 	parser.add_argument("-pa","--mp_id", help="The Materials Project ID", required = False)
 	args = parser.parse_args()
 
-	run_dekode_for(halides_1, potcar_path, amobt_path, scripts_path, GEOM = True, SELF = True, NSELF = True, \
-	NSELF_AMOBT = True, DIEL = True, PHONON = True, DEFORM = True, AMOBT = True, SOC = False)
+	run_dekode_for(['mp-691'], potcar_path, amobt_path, scripts_path, GEOM = True, SELF = True, NSELF = True, \
+	NSELF_AMOBT = True, DIEL = True, PHONON = True, DEFORM = True, AMOBT = True, SOC = False, computer = 'partita')
 
 #	run_dekode_for(['mp-7831', 'mp-541368', 'mp-22734', 'mp-7863', 'mp-3744', 'mp-7502', 'mp-7233', 'mp-5709'], potcar_path, amobt_path, scripts_path, GEOM = False, SELF = False, NSELF = False, \
-#	NSELF_AMOBT = False, DIEL = False, PHONON = False, DEFORM = False, AMOBT = True, SOC = False)
+#	NSELF_AMOBT = False, DIEL = False, PHONON = False, DEFORM = False, AMOBT = True, SOC = False, computer = 'partita')
 
 #	run_dekode_for(['mp-16281','mp-566788','mp-19321','mp-22189'], potcar_path, amobt_path, scripts_path, GEOM = False, SELF = False, NSELF = False, \
-#	NSELF_AMOBT = False, DIEL = False, PHONON = False, DEFORM = False, AMOBT = True, SOC = False)
+#	NSELF_AMOBT = False, DIEL = False, PHONON = False, DEFORM = False, AMOBT = True, SOC = False, computer = 'partita')
