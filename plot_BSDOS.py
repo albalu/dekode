@@ -65,7 +65,7 @@ def find_bs_labels_from_file(nself_dir = 'nself'):
         IOError('KPOINTS (line-mode) file must be present')
     labels = [r"$%s$" % lab for lab in klist]
     return labels
-def find_e_range(bands):
+def find_e_range(bands, range_override = 10):
     emin = 1e100
     emax = -1e100
     for spin in bands.bands.keys():
@@ -77,7 +77,7 @@ def find_e_range(bands):
     emax -= bands.efermi - 1
     ax1.set_ylim(emin, emax)
     ax2.set_ylim(emin, emax)
-    return emin, emax
+    return max(emin, -range_override), min(emax, range_override)
 if __name__ == "__main__":
     ### Check the input arguments
     parser = argparse.ArgumentParser()
@@ -181,6 +181,7 @@ if __name__ == "__main__":
     ax1.set_xticklabels(labels)
 
     ax1.set_xlim(0, len(bands.kpoints))
+    ax1.set_ylim(emin, emax)
     #ax1.set_title("Bands diagram")
 
     # Density of states
@@ -220,6 +221,8 @@ if __name__ == "__main__":
     # plot format style
     # -----------------
     ax2.legend(fancybox=True, shadow=True, prop={'size': 18})
+    ax2.set_ylim(emin, emax)
+
     plt.subplots_adjust(wspace=0)
 
     plt.show()
