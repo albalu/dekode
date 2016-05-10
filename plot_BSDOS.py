@@ -51,14 +51,14 @@ def find_bs_labels_from_file(nself_dir = 'nself'):
                         ordered = True
                     line = l.split()
                     if len(line) > 0:
-                        if line[5] in klist[-1:]:
+                        if line[-1] in klist[-1:]:
                             ordered = True
                             continue
                         if ordered:
-                            klist.append(line[5])
+                            klist.append(line[-1])
                             ordered = False
                         else:
-                            klist[-1] = klist[-1] + '|' + line[5]
+                            klist[-1] = klist[-1] + '|' + line[-1]
                             ordered = True
 
     except IOError:
@@ -197,13 +197,13 @@ if __name__ == "__main__":
     # spd contribution
     ax2.plot(spd_dos[OrbitalType.s].densities[Spin.up],
              dosrun.tdos.energies - dosrun.efermi,
-             "r-", label="3s", lw=2)
+             "r-", label="s", lw=2)
     ax2.plot(spd_dos[OrbitalType.p].densities[Spin.up],
              dosrun.tdos.energies - dosrun.efermi,
-             "g-", label="3p", lw=2)
+             "g-", label="p", lw=2)
     ax2.plot(spd_dos[OrbitalType.d].densities[Spin.up],
              dosrun.tdos.energies - dosrun.efermi,
-             "b-", label="3d", lw=2)
+             "b-", label="d", lw=2)
 
     # total dos
     ax2.fill_between(dosrun.tdos.densities[Spin.up],
