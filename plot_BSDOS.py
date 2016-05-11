@@ -225,6 +225,6 @@ if __name__ == "__main__":
 
     plt.subplots_adjust(wspace=0)
 
-    plt.show()
+    # plt.show()
     # plt.savefig(sys.argv[0].strip(".py") + ".pdf", format="pdf")
-    plt.savefig(cur_dir_name + ".pdf", format="pdf")
+    plt.savefig(cur_dir_name + ".png", format="png")
