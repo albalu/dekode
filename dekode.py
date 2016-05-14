@@ -21,6 +21,7 @@ from decimal import *
 from os import remove, close
 import urllib2
 import json as jsonlib
+
 import pymatgen as mp
 from pymatgen.symmetry.bandstructure import HighSymmKpath
 
@@ -117,10 +118,11 @@ from run_aMoBT import find_reference
 ################ Set up nested functions to be used later ##################
 
 def run_vasp(computer = 'partita', y = 'vasp-ib2.csh', ncores = 16):
+	if computer in ['edison', 'Edison', 'EDISON']:
+		ncores = 12
 	if computer in ['partita', 'Partita', 'PARTITA']:
 		os.system('qsub ' + y)
 	elif computer in ['cori', 'Cori', 'CORI', 'edison', 'Edison', 'EDISON']:
-		os.system('module load vasp')
 		os.system('srun -n ' + str(ncores) + ' vasp_std')
 	return
 
@@ -481,23 +483,21 @@ if incar == "default":
 ############ GEOMETRIC OPTIMIZATION #########################################################################################
 
 if geom in ['TRUE', 'True', 'true']:
-    if incar != "default":
-	if ~os.path.exists('POTCAR'):
-		get_POTCAR(potcar_path)
-        writeINCARgeom(SOC)
+	if incar != "default":
+	        writeINCARgeom(SOC)
+#	if (~os.path.exists('POTCAR')) or (os.stat('POTCAR').st_size == 0):
+	get_POTCAR(potcar_path)
 
-    # Make a directory for the files involved in the geometric optimization
-    os.system("mkdir geom")
-    os.system("cp "+y+" geom/")
-    os.system("mv INCAR KPOINTS POSCAR POTCAR geom/")
-    os.chdir("geom/")    
+# Make a directory for the files involved in the geometric optimization
+	os.system("mkdir geom")
+	os.system("cp "+y+" geom/")
+	os.system("mv INCAR KPOINTS POSCAR POTCAR geom/")
+	os.chdir("geom/")    
 
-    # Now submit the first the job for the first time for geometric optimization
-    run_vasp(computer, y)
-
-    wait_for_OUTCAR('geom')
-
-    os.chdir("../")
+# Now submit the first the job for the first time for geometric optimization
+	run_vasp(computer, y)
+	wait_for_OUTCAR('geom')
+	os.chdir("../")
 
 ######################################################################################################################################################
 
