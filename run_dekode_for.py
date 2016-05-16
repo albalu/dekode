@@ -53,18 +53,24 @@ False, DIEL = False, PHONON = False, DEFORM = False, AMOBT = False, SOC = False,
 	if computer in ['partita', 'Partita', 'PARTITA']:
 		computer = 'partita'
 	if SOC:
-#		if ~os.path.exists('SOC')
+#		if not os.path.exists('SOC')
 		os.system('mkdir SOC')
 		os.chdir('SOC')
 	for id in materials_list:
 ## Uncomment #1 if you want to start from the beginning
 		os.system('mkdir ' + id)
-		if ~os.path.exists('dekode.py'):
+		if not os.path.exists('dekode.py'):
 			os.system('%s %s%s %s' % ('cp', scripts_path, 'dekode.py', id))
-		if ~os.path.exists(computer + '.sh'):
+		else:
+			os.system('cp dekode.py ' + id)
+		if not os.path.exists(computer + '.sh'):
 			os.system('%s %s%s %s' % ('cp', scripts_path, computer + '.sh', id))
-		if ~os.path.exists('vasp-*'):
+		else:
+			os.system('cp ' + computer + '.sh ' + id)
+		if not os.path.exists('vasp-*'):
 			os.system('cp ~/vasp-ib2.csh ' + id)
+		else:
+			os.system('cp vasp* ' + id)
 		os.chdir(id)
 #		make_input(id, amobt_path, scripts_path, SOC) #1
 		make_input(potcar_path, amobt_path, scripts_path, id, GEOM, SELF, NSELF, NSELF_AMOBT, DIEL, PHONON, DEFORM, AMOBT, SOC, computer)
@@ -93,7 +99,7 @@ if __name__ == "__main__":
 #	run_dekode_for(materials_list, potcar_path, amobt_path, scripts_path, GEOM = True, SELF = True, NSELF = True, \
 #	NSELF_AMOBT = True, DIEL = True, PHONON = True, DEFORM = True, AMOBT = True, SOC = False, computer = 'partita')
 
-	run_dekode_for(['mp-1201'], potcar_path, amobt_path, scripts_path, GEOM = False, SELF = False, NSELF = False, \
+	run_dekode_for(materials_list, potcar_path, amobt_path, scripts_path, GEOM = False, SELF = False, NSELF = False, \
 	NSELF_AMOBT = False, DIEL = False, PHONON = False, DEFORM = False, AMOBT = True, SOC = False, computer = 'partita')
 
 #	run_dekode_for(['mp-16281','mp-566788','mp-19321','mp-22189'], potcar_path, amobt_path, scripts_path, GEOM = False, SELF = False, NSELF = False, \
