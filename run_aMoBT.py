@@ -35,7 +35,10 @@ def generate_aMoBT_input(type, T_array, n_array, Bgap, LO, static, high, free_e 
 		if kvbm is not '0':
 			indata.write('%s [%s]; \n' % ('kvbm =', kvbm))
 
+		
 		indata.write('%s %f; \n' % ('Bgap =', Bgap))
+		if Bgap < 1:
+			indata.write('%s %f; \n' % ('Bgap =', 1))
 		
 	return
 
