@@ -7,7 +7,6 @@ import os
 
 def find_reference(scripts_path):
         os.system("cp " + scripts_path + "find_eval_eband.m .")
-#       os.system('cp ./nself_aMoBT/EIGENVAL .')
         os.system("octave -q --eval find_eval_eband.m")
         count = 0
         with open('val_kpoint.mat', "rU") as f:
@@ -47,7 +46,7 @@ def find_reference(scripts_path):
         return val_kpoint, con_kpoint, eval, econ, core
 
 if __name__ == "__main__":	
-	scripts_path = '~/scripts/dekode_scripts/'
+	scripts_path = '~/dekode/'
 	strain = [-5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5]
 	with open('ENERGY_INFO.txt','w') as enfo:
 	        enfo.write('%15s %15s %15s %15s %15s %15s \n' % ('strain(%)','volume(A3)','total(eV)','core(eV)','VBM(eV)','CBM(eV)'))
