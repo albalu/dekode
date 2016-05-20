@@ -19,7 +19,7 @@ DIEL = False, PHONON = False, DEFORM = False, AMOBT = False, SOC = False, comput
 		input.write('%s %s \n' % ('DIEL =', DIEL))
 		input.write('%s %s \n' % ('PHONON =', PHONON))
 		api = mp.MPRester(mp_api_key)
-		if id not in ['noid']:
+		if 'mp-' in id:
 			structure = api.get_structure_by_material_id(id)
 			structure.to(filename="POSCAR")
 			with open('POSCAR','r') as poscar:
