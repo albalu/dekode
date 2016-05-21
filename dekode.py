@@ -51,6 +51,7 @@ aMoBT = "FALSE"
 SOC = "False"
 aMoBT_path = "/research-projects/partita/faghaniniaa/current_jobs/carrier_scattering/VERSIONS/latest_aMoBT/"
 scripts_path = "~/dekode"
+potcar_patj = "/cluster/caml/vasp-pot/PBE/"
 computer = 'partita'
 
 with open('MIKECAR', "r") as f:
@@ -103,11 +104,11 @@ with open('MIKECAR', "r") as f:
 	elif line[0] == "COMPUTER":
 		computer = line[2]
 
-if ~potcar_path.endswith('/'):
+if not potcar_path.endswith('/'):
 	potcar = potcar_path + '/'
-if ~aMoBT_path.endswith('/'):
+if not aMoBT_path.endswith('/'):
 	aMoBT_path = aMoBT_path + '/'
-if ~scripts_path.endswith('/'):
+if not scripts_path.endswith('/'):
 	scripts_path = scripts_path + '/'
 
 ####################################
@@ -914,7 +915,7 @@ if aMoBT in ['TRUE', 'True', 'true']:
 
 	from run_aMoBT import run_aMoBT_on_dekode_results
 #	run_aMoBT_on_dekode_results(scripts_path, aMoBT_path)	
-	run_aMoBT_on_dekode_results(scripts_path, aMoBT_path, T_array = '[150 200 250 300 350 400 450 500 550 600 650 700 750 800]', n_array = '[1e17 1e18 1e19 1e20 1e21]', free_e = 'true')
+	run_aMoBT_on_dekode_results(scripts_path, aMoBT_path, T_array = '[150 200 250 300 350 400 450 500 550 600 650 700 750 800]', n_array = '[1e17 1e18 1e19 1e20 1e21]', free_e = 'both')
 
 ##############################################################################################################################
 

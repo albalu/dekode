@@ -103,27 +103,10 @@ def get_me_dielectrics(filename, LO_phonon, TO_phonon):
 	highf_dielectric = static_dielectric * (TO_phonon/LO_phonon)**2
 	return static_dielectric, highf_dielectric
 
-def run_aMoBT_on_dekode_results(scripts_path, aMoBT_path, T_array = '[150 200 250 300 350 400 450 500 550 600 650 700 750 800]', n_array = '[1e17 1e18 1e19 1e20 1e21]', free_e = 'false'):
+def prepare_files_and_submit(aMoBT_path, T_array, n_array, Bgap, LO_phonon, static, highf, free_e, E_deformation_n, E_deformation_p, kcbm, kvbm):
 
-	os.system("cp " + scripts_path + "find_DOS_peaks.py .")
-	from find_DOS_peaks import find_DOS_peaks
-	LO_phonon, TO_phonon = find_DOS_peaks('phonon/total_dos.dat')
-
-	os.system("cp " + scripts_path + "calc_def_potential.py .")
-	from calc_def_potential import calc_def_potential
-	E_deformation_p, E_deformation_n = calc_def_potential('deform/ENERGY_INFO.txt')
-
-	static, highf = get_me_dielectrics('./dielectric/OUTCAR', LO_phonon, TO_phonon)
-
-	os.chdir('nself')
-	kvbm, kcbm, eval, econ, core = find_reference(scripts_path)
-	os.chdir('../')
-	Bgap = econ - eval
-
-	# For n-type
 	n_type_folder = '1_n-type_aMoBT_free-e=' + free_e
 	p_type_folder = '2_p-type_aMoBT_free-e=' + free_e
-
 	os.system('mkdir ' + n_type_folder)
 	os.chdir(n_type_folder)
 	os.system('rm *')
@@ -149,3 +132,25 @@ def run_aMoBT_on_dekode_results(scripts_path, aMoBT_path, T_array = '[150 200 25
 	os.system('qsub run.sh')
 	os.chdir('../')
 
+
+def run_aMoBT_on_dekode_results(scripts_path, aMoBT_path, T_array = '[150 200 250 300 350 400 450 500 550 600 650 700 750 800]', n_array = '[1e17 1e18 1e19 1e20 1e21]', free_e = 'both'):
+
+	os.system("cp " + scripts_path + "find_DOS_peaks.py .")
+	from find_DOS_peaks import find_DOS_peaks
+	LO_phonon, TO_phonon = find_DOS_peaks('phonon/total_dos.dat')
+
+	os.system("cp " + scripts_path + "calc_def_potential.py .")
+	from calc_def_potential import calc_def_potential
+	E_deformation_p, E_deformation_n = calc_def_potential('deform/ENERGY_INFO.txt')
+
+	static, highf = get_me_dielectrics('./dielectric/OUTCAR', LO_phonon, TO_phonon)
+
+	os.chdir('nself')
+	kvbm, kcbm, eval, econ, core = find_reference(scripts_path)
+	os.chdir('../')
+	Bgap = econ - eval
+
+	if free_e in ['true', 'both']:
+		prepare_files_and_submit(aMoBT_path, T_array, n_array, Bgap, LO_phonon, static, highf, 'true', E_deformation_n, E_deformation_p, kcbm, kvbm)
+	if free_e in ['false', 'both']:
+		prepare_files_and_submit(aMoBT_path, T_array, n_array, Bgap, LO_phonon, static, highf, 'false', E_deformation_n, E_deformation_p, kcbm, kvbm)
