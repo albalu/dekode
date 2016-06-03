@@ -31,7 +31,7 @@ DIEL = False, PHONON = False, DEFORM = False, AMOBT = False, SOC = False, comput
 						for i in line.split():
 							natoms += int(i)
 			os.system('rm POSCAR')
-			if natoms < 17:
+			if natoms < 15:
 				input.write('DIM = 2x2x2 \n')
 			else:
 				input.write('DIM = 1x1x1 \n')
