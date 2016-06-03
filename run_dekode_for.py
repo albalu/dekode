@@ -51,7 +51,7 @@ DIEL = False, PHONON = False, DEFORM = False, AMOBT = False, SOC = False, comput
 def run_dekode_for(materials_list, potcar_path, amobt_path, scripts_path, GEOM = False, SELF = False, NSELF = False, NSELF_AMOBT = 
 False, DIEL = False, PHONON = False, DEFORM = False, AMOBT = False, SOC = False, computer = 'partita'):
 	if SOC:
-		if not os.path.exists('SOC')
+		if not os.path.exists('SOC'):
 			os.system('mkdir SOC')
 		os.chdir('SOC')
 	for id in materials_list:
@@ -109,6 +109,10 @@ if __name__ == "__main__":
 #	some_exp_TCOs = SnO, 		SrTiO3, LaCrO3, 	CuCrO2, CuCrO2, 	CuGaO2, SrCu2O2, 	CdO, SrSnO3, 	LaCuOSe, 	Co1.92Zn1.08O4,	CdSe, 	CdS,	CuI
 
 	TE_exp_1 = ['mp-2168', 'mp-1379', 'mp-1883', 'mp-1861', 'mp-22297', 'mp-568889', 'mp-22856'] 
+
+        new_TEs_1 = ['mp-18300', 'mp-924129', 'mp-1367', 'mp-21276', 'mp-2231', 'mp-34202', 'mp-34361', 'mp-1317', 'mp-691', 'mp-2201', 'mp-1201']
+                        #  Ca3AlSb3     ZrNiSn      Mg2Si	PbS             SnS     Bi2Te3    Tl9BiTe6	CoSb3    SnSe           PbSe    Sb2Te3
+
 
 #	some_exp_TCOs = some_exp_TCOs - 'mp-552488'
 #	some_exp_TCOs = some_exp_TCOs - 'mp-570136'
