@@ -586,22 +586,25 @@ if nself in ['TRUE', 'True', 'true']:
 
 if nself_aMoBT in ['TRUE', 'True', 'true']:
 
-    os.system("cp nself/EIGENVAL .")
     os.system("cp " + scripts_path +  "KPOINTS_generator_for_aMoBT.m .")
-    val_kpoint, con_kpoint, eval, econ, core = find_reference(scripts_path)
-    replace("KPOINTS_generator_for_aMoBT.m","KPOINTS_generator_for_aMoBT.m","0 0 0", con_kpoint)
+    if os.path.exists('nself/EIGENVAL'):
+	    os.system("cp nself/EIGENVAL .")
+	    val_kpoint, con_kpoint, eval, econ, core = find_reference(scripts_path)
+	    replace("KPOINTS_generator_for_aMoBT.m","KPOINTS_generator_for_aMoBT.m","0 0 0", con_kpoint)
 
     os.system("octave -q KPOINTS_generator_for_aMoBT.m")
     os.system("rm *.mat")
-    os.system("rm EIGENVAL")
-  
+    os.system("rm EIGENVAL")  
 
     # Retreieve the needed files from the nself directory and rename KPOINTS_aMoBT to KPOINTS
     os.system('mv KPOINTS_aMoBT KPOINTS')
-    os.system('cp ./nself/POTCAR .')
-    os.system('cp ./nself/POSCAR .')
-    os.system('cp ./nself/CHG* .')
-    os.system('cp ./nself/INCAR .')
+    os.system('cp ./self/POTCAR .')
+    os.system('cp ./self/POSCAR .')
+    os.system('cp ./self/CHG* .')
+    if os.path.exists('nself'):
+	    os.system('cp ./nself/INCAR .')
+    else:
+	    writeINCARnself(SOC)
 
 
     # Make a directory for the files involved with the  non-self consistent calcuations
@@ -614,16 +617,18 @@ if nself_aMoBT in ['TRUE', 'True', 'true']:
     # Run the non-self consistent calculations
     run_vasp(computer, y)
 
-    if val_kpoint != con_kpoint:
-	os.chdir("../")
-	replace("KPOINTS_generator_for_aMoBT.m","KPOINTS_generator_for_aMoBT.m", con_kpoint, val_kpoint)
-	os.system("octave -q KPOINTS_generator_for_aMoBT.m")
-	os.system('cp -r nself_aMoBT p_nself_aMoBT')
-	os.system('mv KPOINTS_aMoBT p_nself_aMoBT/KPOINTS')
-	os.chdir("p_nself_aMoBT")
-        run_vasp(computer, y)
-	wait_for_OUTCAR('p_nself_aMoBT')
-	os.chdir("../nself_aMoBT")
+
+    if os.path.exists('nself/EIGENVAL'):
+    	if val_kpoint != con_kpoint:
+		os.chdir("../")
+		replace("KPOINTS_generator_for_aMoBT.m","KPOINTS_generator_for_aMoBT.m", con_kpoint, val_kpoint)
+		os.system("octave -q KPOINTS_generator_for_aMoBT.m")
+		os.system('cp -r nself_aMoBT p_nself_aMoBT')
+		os.system('mv KPOINTS_aMoBT p_nself_aMoBT/KPOINTS')
+		os.chdir("p_nself_aMoBT")
+        	run_vasp(computer, y)
+		wait_for_OUTCAR('p_nself_aMoBT')
+		os.chdir("../nself_aMoBT")
 
     wait_for_OUTCAR('nself_aMoBT')
 
