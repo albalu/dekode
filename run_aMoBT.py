@@ -10,12 +10,12 @@ import os
 def generate_aMoBT_input(type, T_array, n_array, Bgap, LO, static, high, free_e = 'false', E_deformation_n = 0.0, E_deformation_p = 0.0, kcbm = '0', kvbm = '0'): 
 	with file('INPUTS.m', 'w') as indata:
 		indata.write('function [T_array, n_array, Bgap, N_dis, k_min0, k_max, k_trans0, k_step_fine0, k_step0, maximum_iterations_for_g_PO, ...\n')
-		indata.write('E, dTdz, m, omega_LO, epsilon_s, epsilon_inf, E_deformation_n, E_deformation_p, P_piezo, C_long, C_trans, ...\n')
+		indata.write('k_F, E, dTdz, m, m2, m_h, m2_h, omega_LO, omega_TO, epsilon_s, epsilon_inf, E_deformation_n, E_deformation_p, P_piezo, C_long, C_trans, ii_pwe, ...\n')
 		indata.write('c_lattice, curve_fit_iteration, folder_of_plots, spin_orbit_coupling, LORBIT, iterate_over_N_dis, free_e, type, ...\n')
 		indata.write('kcbm, kvbm, T_trans, bands_n, bands_p, charge, VBM_band_number_override] = INPUTS \n')
 
-		indata.write('[Bgap, default_T, N_dis, k_min0, k_max, k_trans0, k_step_fine0, k_step0, maximum_iterations_for_g_PO, ...\n')
-		indata.write('E, dTdz, m, P_piezo, C_long, C_trans, c_lattice, curve_fit_iteration, folder_of_plots, bands_n, bands_p, ...\n')
+		indata.write('[Bgap, default_T, N_dis, k_min0, k_max, k_trans0, k_step_fine0, k_step0, maximum_iterations_for_g_PO, omega_TO, ...\n')
+		indata.write('k_F, E, dTdz, m, m2, m_h, m2_h, P_piezo, C_long, C_trans, c_lattice, curve_fit_iteration, folder_of_plots, bands_n, bands_p, ii_pwe, ...\n')
 		indata.write('spin_orbit_coupling, LORBIT, iterate_over_N_dis, free_e, kcbm, kvbm, T_trans, charge, VBM_band_number_override] = ...\n')
 		indata.write('initialize;\n')
 
