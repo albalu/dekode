@@ -51,12 +51,17 @@ if __name__ == "__main__":
 	parser.add_argument("-f", "--filename", help="The filename that contains the list, default=checklist",	required=False, default="checklist")
 	parser.add_argument("-n", "--n", help="Carrier concentration", required=False, default=1e21)
 	parser.add_argument("-T", "--T", help="Temperature(K)", required=False, default=300)
-	parser.add_argument("-d", "--free_e", help="To use free-electron density of states or not ('''true''' or '''false''')", required=False, default="true")
+	parser.add_argument("-d", "--free_e", help="To use free-electron density of states or not (true or false)", required=False, default="true")
+	parser.add_argument("-fo", "--formula", help="Whether to print formulas or not (options: T or F)", required=False, default=False)
 	args = parser.parse_args()
+	if args.formula in ['T', 't', 'true', 'True', 'TRUE']:
+		args.formula = True
+
 	folders = ['./', 'new_TEs/', 'new_TCOs/']
 	n_type_folder = '1_n-type_aMoBT_free-e=' + args.free_e
 	p_type_folder = '2_p-type_aMoBT_free-e=' + args.free_e
 	clist = []
+	swd = os.getcwd()
 	with open(args.filename,'r') as raw_list:
 		for line in raw_list:
 			if len(line)>1:
@@ -65,21 +70,30 @@ if __name__ == "__main__":
 					clist.append(line.split()[0])
 	stat = open('status.txt', 'w')
 	rem = open('remaining.txt', 'w')
-	stat.write('%30s%15s%12s %10s%10s%10s%10s\n' % ('location of mp-id (if any)', 'mu-cm2/V.s', 'sigma-S/cm', 'S-uV/K', 'p_mu', 'p_sigma', 'p_S' ))
+	stat.write('%30s%12s%12s%12s %10s%10s%10s%10s\n' % ('location of mp-id (if any)', 'formula', 'mu-cm2/V.s', 'sigma-S/cm', 'S-uV/K', 'p_mu', 'p_sigma', 'p_S' ))
 	for c in clist:
+		if args.formula:
+			apikey = 'fDJKEZpxSyvsXdCt'
+			from pymatgen.matproj.rest import MPRester
+			matproj = MPRester(apikey)
+			formula = matproj.get_data(c, prop="pretty_formula")[0]["pretty_formula"]
+			spacegroup = matproj.get_data(c, prop="spacegroup")[0]["spacegroup"]
 		proceed = False
 		for subf in folders:
 			if os.path.exists(subf + c):
 				proceed = True
-				c = subf + c
+				c_path = subf + c
 		if proceed:
-			stat.write('%30s\n' % c)
+			os.chdir(c_path)
+			mobility_n, conductivity_n, thermopower_n = find_properties(n_type_folder + '/aMoBT_output.txt', args.n, args.T)
+			mobility_p, conductivity_p, thermopower_p = find_properties(p_type_folder + '/aMoBT_output.txt', args.n, args.T)
+			os.chdir(swd)
+			stat.write('%30s%12.2f%12.2f%12.2f %10.2f%10.2f%10.2f\n' % (c_path, mobility_n, conductivity_n, thermopower_n, mobility_p, conductivity_p, thermopower_p))
 		else:
-			stat.write('%30s%15s\n' % (c, 'N.A.'))
-			mpstart = c.find('mp-')
-			rem.write(c[mpstart:] + '\n')
+			stat.write('%30s%12s\n' % (c, 'N.A.'))
+#			mpstart = c.find('mp-')
+#			rem.write(c[mpstart:] + '\n')
+			rem.write(c + '\n')
 		
 	stat.close()
 	rem.close()
-	mobility_n, conductivity_n, thermopower_n = find_properties(n_type_folder + '/aMoBT_output.txt', args.n, args.T)
-	mobility_p, conductivity_p, thermopower_p = find_properties(p_type_folder + '/aMoBT_output.txt', args.n, args.T)
