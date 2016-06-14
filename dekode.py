@@ -462,7 +462,7 @@ if SOC in ['TRUE', 'True', 'true']:
 
 ######################  write POSCAR, POTCAR, KPOINTS, KPOINTS_NSELF ##################
 
-if (poscar == "default") and ((geom in ['TRUE', 'True', 'true']) or (nself in ['TRUE', 'True', 'true'])):
+if (poscar == "default") and ((geom in ['t', 'T', 'TRUE', 'True', 'true']) or (nself in ['t', T', 'TRUE', 'True', 'true'])):
     matproj = mp.MPRester(mp_api_key)
     structure = matproj.get_structure_by_material_id(comp_name)
     structure.to(filename="POSCAR")
@@ -509,7 +509,7 @@ if geom in ['TRUE', 'True', 'true']:
 
 ############################### SELF CONSISTENT CALCULATIONS #################################################################
 
-if self in ['TRUE', 'True', 'true']:
+if self in ['t', 'T', 'TRUE', 'True', 'true']:
 
     # write proper INCAR file
     if incar != "default":
@@ -540,7 +540,7 @@ if self in ['TRUE', 'True', 'true']:
 
 ###################### NON-SELF CONSISTENT CALCULATIONS #######################################################################
 
-if nself in ['TRUE', 'True', 'true']:
+if nself in ['t', 'T', 'TRUE', 'True', 'true']:
 
     #write the proper INCAR file
     if incar != "default":
@@ -584,7 +584,7 @@ if nself in ['TRUE', 'True', 'true']:
 
 ###################### aMoBT NON-SELF CONSISTENT CALCULATIONS #######################################################################
 
-if nself_aMoBT in ['TRUE', 'True', 'true']:
+if nself_aMoBT in ['t', 'T', 'TRUE', 'True', 'true']:
 
     os.system("cp " + scripts_path +  "KPOINTS_generator_for_aMoBT.m .")
     if os.path.exists('nself/EIGENVAL'):
@@ -638,7 +638,7 @@ if nself_aMoBT in ['TRUE', 'True', 'true']:
 
 ############################### DIELECTRIC CALCULATIONS #################################################################
 
-if dielectric in ['TRUE', 'True', 'true']:
+if dielectric in ['t', 'T', 'TRUE', 'True', 'true']:
 
     # Write proper INCAR file
     writeINCARdielectric()
@@ -699,7 +699,7 @@ if dielectric in ['TRUE', 'True', 'true']:
 
 ############################# PHONON CALCULATIONS #############################################################################
 
-if phonon in ['TRUE', 'True', 'true']:
+if phonon in ['t', 'T', 'TRUE', 'True', 'true']:
 
     #steps to run code.py after finishing band:
     #1 (make and navigate to phonon folder)
@@ -835,7 +835,7 @@ if phonon in ['TRUE', 'True', 'true']:
 
 ########################################DEFORMATION CALCULATIONS###############################################################
 
-if deform in ['TRUE', 'True', 'true']:
+if deform in ['t', 'T', 'TRUE', 'True', 'true']:
 
     os.system("mkdir deform")
     os.system("cp self/INCAR .")
@@ -916,7 +916,7 @@ if deform in ['TRUE', 'True', 'true']:
 
 ##############################################################################################################################
 
-if aMoBT in ['TRUE', 'True', 'true']:
+if aMoBT in ['t', 'T', 'TRUE', 'True', 'true']:
 
 	from run_aMoBT import run_aMoBT_on_dekode_results
 #	run_aMoBT_on_dekode_results(scripts_path, aMoBT_path)	
