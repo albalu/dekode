@@ -56,6 +56,8 @@ if __name__ == "__main__":
 	args = parser.parse_args()
 	if args.formula in ['T', 't', 'true', 'True', 'TRUE']:
 		args.formula = True
+	else:
+		print('You can include the formula of each material in status.txt by using --fo t')
 
 	folders = ['./', 'new_TEs/', 'new_TCOs/']
 	n_type_folder = '1_n-type_aMoBT_free-e=' + args.free_e
@@ -70,14 +72,18 @@ if __name__ == "__main__":
 					clist.append(line.split()[0])
 	stat = open('status.txt', 'w')
 	rem = open('remaining.txt', 'w')
-	stat.write('%30s%12s%12s%12s %10s%10s%10s%10s\n' % ('location of mp-id (if any)', 'formula', 'mu-cm2/V.s', 'sigma-S/cm', 'S-uV/K', 'p_mu', 'p_sigma', 'p_S' ))
+	stat.write('%30s%12s%12s%12s %10s%10s%10s%10s%9s%9s\n' % ('location of mp-id (if any)', 'formula', 'mu-cm2/V.s', 'sigma-S/cm', 'S-uV/K', 'p_mu', 'p_sigma', 'p_S', 'm_e', 'm_h'))
 	for c in clist:
+		formula = c
 		if args.formula:
-			apikey = 'fDJKEZpxSyvsXdCt'
-			from pymatgen.matproj.rest import MPRester
-			matproj = MPRester(apikey)
-			formula = matproj.get_data(c, prop="pretty_formula")[0]["pretty_formula"]
-			spacegroup = matproj.get_data(c, prop="spacegroup")[0]["spacegroup"]
+			try:
+				apikey = 'fDJKEZpxSyvsXdCt'
+				from pymatgen.matproj.rest import MPRester
+				matproj = MPRester(apikey)
+				formula = matproj.get_data(c, prop="pretty_formula")[0]["pretty_formula"]
+				spacegroup = matproj.get_data(c, prop="spacegroup")[0]["spacegroup"]
+			except:
+				formula = 'API-failed'
 		proceed = False
 		for subf in folders:
 			if os.path.exists(subf + c):
@@ -87,8 +93,9 @@ if __name__ == "__main__":
 			os.chdir(c_path)
 			mobility_n, conductivity_n, thermopower_n = find_properties(n_type_folder + '/aMoBT_output.txt', args.n, args.T)
 			mobility_p, conductivity_p, thermopower_p = find_properties(p_type_folder + '/aMoBT_output.txt', args.n, args.T)
+			m_e, m_h = find_effective_mass(n_type_folder + '/log.out')
 			os.chdir(swd)
-			stat.write('%30s%12.2f%12.2f%12.2f %10.2f%10.2f%10.2f\n' % (c_path, mobility_n, conductivity_n, thermopower_n, mobility_p, conductivity_p, thermopower_p))
+			stat.write('%30s%12s%12.2f%12.2f %10.2f%10.2f%10.2f%10.2f%9.4f%9.4f\n' % (c_path, formula, mobility_n, conductivity_n, thermopower_n, mobility_p, conductivity_p, thermopower_p, m_e, m_h))
 		else:
 			stat.write('%30s%12s\n' % (c, 'N.A.'))
 #			mpstart = c.find('mp-')
@@ -97,3 +104,4 @@ if __name__ == "__main__":
 		
 	stat.close()
 	rem.close()
+	print('\nDONE! see status.txt and remaining.txt')
