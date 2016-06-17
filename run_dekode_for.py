@@ -31,7 +31,7 @@ DIEL = False, PHONON = False, DEFORM = False, AMOBT = False, SOC = False, comput
 						for i in line.split():
 							natoms += int(i)
 			os.system('rm POSCAR')
-			if natoms < 15:
+			if natoms < 10:
 				input.write('DIM = 2x2x2 \n')
 			else:
 				input.write('DIM = 1x1x1 \n')
@@ -108,7 +108,10 @@ if __name__ == "__main__":
 	some_exp_TCOs = ['mp-2097', 'mp-4651', 'mp-19281', 'mp-510625', 'mp-505562', 'mp-505562', 'mp-13900', 'mp-1132', 'mp-2879', 'mvc-6068', 'mp-2691', 'mp-672']	
 #	some_exp_TCOs = SnO, 		SrTiO3, LaCrO3, 	CuCrO2, CuCrO2, 	CuGaO2, SrCu2O2, 	CdO, SrSnO3, 	LaCuOSe, 	Co1.92Zn1.08O4,	CdSe, 	CdS,	CuI
 
-	TE_exp_1 = ['mp-2168', 'mp-1379', 'mp-1883', 'mp-1861', 'mp-22297', 'mp-568889', 'mp-22856'] 
+#	TE_exp_1 = ['mp-2168', 'mp-1379', 'mp-1883', 'mp-1861', 'mp-22297', 'mp-568889', 'mp-22856'] 
+#			SnSe	SnS	SnTe		Cu2Te	Cu2Se		Ag2Se	Bi2S3
+	TE_exp_2 = ['mp-541837','mp-568390','mp-542625','mp-54262', 'mp-17667','mp-12275','mp-29938','mp-17985','mp-2343','mp-649033','mp-7431']
+#			Bi2Se3	Bi2Te3		Sr3GaSb3 Sr3Ga0.93Zn0.07S Sr3AlSb3 SrZnSb2 BaGa2Sb2 Ca5Ga2Sb6	Mg2Sn	Sr5In2Sb6	SrZn2Sb2
 
         new_TEs_1 = ['mp-18300', 'mp-924129', 'mp-1367', 'mp-21276', 'mp-2231', 'mp-34202', 'mp-34361', 'mp-1317', 'mp-691', 'mp-2201', 'mp-1201']
                         #  Ca3AlSb3     ZrNiSn      Mg2Si	PbS             SnS     Bi2Te3    Tl9BiTe6	CoSb3    SnSe           PbSe    Sb2Te3
@@ -147,12 +150,12 @@ if __name__ == "__main__":
 	parser.add_argument("-pa","--mp_id", help="The Materials Project ID", required = False)
 	args = parser.parse_args()
 
-	run_dekode_for(TE_exp_1, potcar_path, amobt_path, scripts_path, GEOM = True, SELF = True, NSELF = True, \
+	run_dekode_for(['mp-28166','mp-382','mp-30055'], potcar_path, amobt_path, scripts_path, GEOM = True, SELF = True, NSELF = True, \
 	NSELF_AMOBT = True, DIEL = True, PHONON = True, DEFORM = True, AMOBT = True, SOC = False, computer = 'partita')
 
 #	run_dekode_for(some_exp_TCOs, potcar_path, amobt_path, scripts_path, GEOM = False, SELF = False, NSELF = False, \
 #	NSELF_AMOBT = True, DIEL = True, PHONON = True, DEFORM = True, AMOBT = True, SOC = False, computer = 'partita')
 
-
-#	run_dekode_for(['mp-16281','mp-566788','mp-19321','mp-22189'], potcar_path, amobt_path, scripts_path, GEOM = False, SELF = False, NSELF = False, \
+# Just aMoBT:
+#	run_dekode_for(['mp-866132'], potcar_path, amobt_path, scripts_path, GEOM = False, SELF = False, NSELF = False, \
 #	NSELF_AMOBT = False, DIEL = False, PHONON = False, DEFORM = False, AMOBT = True, SOC = False, computer = 'partita')
