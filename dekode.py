@@ -462,7 +462,7 @@ if SOC in ['TRUE', 'True', 'true']:
 
 ######################  write POSCAR, POTCAR, KPOINTS, KPOINTS_NSELF ##################
 
-if (poscar == "default") and ((geom in ['t', 'T', 'TRUE', 'True', 'true']) or (nself in ['t', T', 'TRUE', 'True', 'true'])):
+if (poscar == "default") and ((geom in ['t', 'T', 'TRUE', 'True', 'true']) or (nself in ['t', 'T', 'TRUE', 'True', 'true'])):
     matproj = mp.MPRester(mp_api_key)
     structure = matproj.get_structure_by_material_id(comp_name)
     structure.to(filename="POSCAR")
@@ -486,7 +486,7 @@ if incar == "default":
 
 ############ GEOMETRIC OPTIMIZATION #########################################################################################
 
-if geom in ['TRUE', 'True', 'true']:
+if geom in ['t', 'T', 'TRUE', 'True', 'true']:
 	if incar != "default":
 	        writeINCARgeom(SOC)
 #	if (~os.path.exists('POTCAR')) or (os.stat('POTCAR').st_size == 0):
