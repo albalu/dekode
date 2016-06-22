@@ -49,7 +49,7 @@ def find_effective_mass(filename):
 if __name__ == "__main__":
 	parser = argparse.ArgumentParser()
 	parser.add_argument("-f", "--filename", help="The filename that contains the list, default=checklist",	required=False, default="checklist")
-	parser.add_argument("-n", "--n", help="Carrier concentration", required=False, default=1e21)
+	parser.add_argument("-n", "--n", help="Carrier concentration", required=False, default=1e20)
 	parser.add_argument("-T", "--T", help="Temperature(K)", required=False, default=300)
 	parser.add_argument("-d", "--free_e", help="To use free-electron density of states or not (true or false)", required=False, default="true")
 	parser.add_argument("-fo", "--formula", help="Whether to print formulas or not (options: T or F)", required=False, default=False)
@@ -91,8 +91,8 @@ if __name__ == "__main__":
 				c_path = subf + c
 		if proceed:
 			os.chdir(c_path)
-			mobility_n, conductivity_n, thermopower_n = find_properties(n_type_folder + '/aMoBT_output.txt', args.n, args.T)
-			mobility_p, conductivity_p, thermopower_p = find_properties(p_type_folder + '/aMoBT_output.txt', args.n, args.T)
+			mobility_n, conductivity_n, thermopower_n = find_properties(n_type_folder + '/aMoBT_output.txt', float(args.n), float(args.T))
+			mobility_p, conductivity_p, thermopower_p = find_properties(p_type_folder + '/aMoBT_output.txt', float(args.n), float(args.T))
 			m_e, m_h = find_effective_mass(n_type_folder + '/log.out')
 			os.chdir(swd)
 			stat.write('%30s%12s%12.2f%12.2f %10.2f%10.2f%10.2f%10.2f%9.4f%9.4f\n' % (c_path, formula, mobility_n, conductivity_n, thermopower_n, mobility_p, conductivity_p, thermopower_p, m_e, m_h))
