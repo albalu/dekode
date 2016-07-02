@@ -466,6 +466,8 @@ if SOC in ['TRUE', 'True', 'true']:
 
 if poscar == "default": 
     matproj = mp.MPRester(mp_api_key)
+    structure = matproj.get_structure_by_material_id(comp_name)
+    structure.to(filename="POSCAR")
     dum = matproj.query(criteria=comp_name, properties=["potcar_symbols","potcar_spec","pseudo_potential"])
     potcar_labels = dum[0]["pseudo_potential"]["labels"]
     print("The followng POTCAR labels have been read from The Materials Project and will be used:")
@@ -473,8 +475,6 @@ if poscar == "default":
     get_POTCAR(potcar_path, potcar_labels)
 
     if geom in ['t', 'T', 'TRUE', 'True', 'true']:
-        structure = matproj.get_structure_by_material_id(comp_name)
-        structure.to(filename="POSCAR")
         geom_kpoints = mp.io.vasp.inputs.Kpoints.automatic_density(structure,1000,force_gamma=False)
         mp.io.vasp.inputs.Kpoints.write_file(geom_kpoints,'KPOINTS')
 
