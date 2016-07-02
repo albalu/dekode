@@ -53,6 +53,7 @@ aMoBT_path = "/research-projects/partita/faghaniniaa/current_jobs/carrier_scatte
 scripts_path = "~/dekode"
 potcar_patj = "/cluster/caml/vasp-pot/PBE/"
 computer = 'partita'
+potcar_labels = ''
 
 with open('MIKECAR', "r") as f:
     for line in f:
@@ -166,6 +167,7 @@ def get_POTCAR(potcar_path, potcar_labels = ''):
 					potcar_labels = line.split()
 				elif c > 6:
 					break
+	print("The following POTCAR lables were read from POSCAR:")
 	print(potcar_labels)
 	for label in potcar_labels:
 		if os.path.isfile(potcar_path + label + '/POTCAR'):
@@ -462,20 +464,24 @@ if SOC in ['TRUE', 'True', 'true']:
 
 ######################  write POSCAR, POTCAR, KPOINTS, KPOINTS_NSELF ##################
 
-if (poscar == "default") and ((geom in ['t', 'T', 'TRUE', 'True', 'true']) or (nself in ['t', 'T', 'TRUE', 'True', 'true'])):
+if poscar == "default": 
     matproj = mp.MPRester(mp_api_key)
-    structure = matproj.get_structure_by_material_id(comp_name)
-    structure.to(filename="POSCAR")
-
     dum = matproj.query(criteria=comp_name, properties=["potcar_symbols","potcar_spec","pseudo_potential"])
     potcar_labels = dum[0]["pseudo_potential"]["labels"]
+    print("The followng POTCAR labels have been read from The Materials Project and will be used:")
+    print(potcar_labels)
     get_POTCAR(potcar_path, potcar_labels)
 
-    geom_kpoints = mp.io.vasp.inputs.Kpoints.automatic_density(structure,1000,force_gamma=False)
-    mp.io.vasp.inputs.Kpoints.write_file(geom_kpoints,'KPOINTS')
+    if geom in ['t', 'T', 'TRUE', 'True', 'true']:
+        structure = matproj.get_structure_by_material_id(comp_name)
+        structure.to(filename="POSCAR")
+        geom_kpoints = mp.io.vasp.inputs.Kpoints.automatic_density(structure,1000,force_gamma=False)
+        mp.io.vasp.inputs.Kpoints.write_file(geom_kpoints,'KPOINTS')
 
-    nself_kpoints = mp.io.vasp.inputs.Kpoints.automatic_linemode(20,mp.symmetry.bandstructure.HighSymmKpath(structure, symprec=0.01, angle_tolerance=5))
-    mp.io.vasp.inputs.Kpoints.write_file(nself_kpoints,'KPOINTS_NSELF')
+    if nself in ['t', 'T', 'TRUE', 'True', 'true']:
+
+        nself_kpoints = mp.io.vasp.inputs.Kpoints.automatic_linemode(20,mp.symmetry.bandstructure.HighSymmKpath(structure, symprec=0.01, angle_tolerance=5))
+        mp.io.vasp.inputs.Kpoints.write_file(nself_kpoints,'KPOINTS_NSELF')
 
 if incar == "default":
     get_INCARs(comp_name, mp_api_key, SOC)
@@ -490,7 +496,7 @@ if geom in ['t', 'T', 'TRUE', 'True', 'true']:
 	if incar != "default":
 	        writeINCARgeom(SOC)
 #	if (~os.path.exists('POTCAR')) or (os.stat('POTCAR').st_size == 0):
-	get_POTCAR(potcar_path)
+	get_POTCAR(potcar_path, potcar_labels)
 
 # Make a directory for the files involved in the geometric optimization
 	os.system("mkdir geom")
