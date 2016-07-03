@@ -465,15 +465,16 @@ if SOC in ['TRUE', 'True', 'true']:
 ######################  write POSCAR, POTCAR, KPOINTS, KPOINTS_NSELF ##################
 
 if poscar == "default": 
-    matproj = mp.MPRester(mp_api_key)
-    structure = matproj.get_structure_by_material_id(comp_name)
-    structure.to(filename="POSCAR")
-    dum = matproj.query(criteria=comp_name, properties=["potcar_symbols","potcar_spec","pseudo_potential"])
-    potcar_labels = dum[0]["pseudo_potential"]["labels"]
-    print("The followng POTCAR labels have been read from The Materials Project and will be used:")
-    print(potcar_labels)
-    get_POTCAR(potcar_path, potcar_labels)
-
+    try:
+            matproj = mp.MPRester(mp_api_key)
+            structure = matproj.get_structure_by_material_id(comp_name)
+            structure.to(filename="POSCAR")
+            dum = matproj.query(criteria=comp_name, properties=["potcar_symbols","potcar_spec","pseudo_potential"])
+            potcar_labels = dum[0]["pseudo_potential"]["labels"]
+            print("The followng POTCAR labels have been read from The Materials Project and will be used:")
+            print(potcar_labels)
+    except:
+            raise ValueError(comp_name + " could NOT be found in the Materials Project. Set poscar and incar to given if this is not a valid MPID")
     if geom in ['t', 'T', 'TRUE', 'True', 'true']:
         geom_kpoints = mp.io.vasp.inputs.Kpoints.automatic_density(structure,1000,force_gamma=False)
         mp.io.vasp.inputs.Kpoints.write_file(geom_kpoints,'KPOINTS')
