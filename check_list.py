@@ -72,7 +72,7 @@ if __name__ == "__main__":
 					clist.append(line.split()[0])
 	stat = open('status.txt', 'w')
 	rem = open('remaining.txt', 'w')
-	stat.write('%30s%12s%12s%12s %10s%10s%10s%10s%9s%9s\n' % ('location of mp-id (if any)', 'formula', 'mu-cm2/V.s', 'sigma-S/cm', 'S-uV/K', 'p_mu', 'p_sigma', 'p_S', 'm_e', 'm_h'))
+	stat.write('%30s%12s%12s%12s %10s%7s%10s%10s%10s%7s%9s%9s\n' % ('location of mp-id (if any)', 'formula', 'mu-cm2/V.s', 'sigma-S/cm', 'S-uV/K', 'PF', 'p_mu', 'p_sigma', 'p_S', 'p_PF', 'm_e', 'm_h'))
 	for c in clist:
 		formula = c
 		if args.formula:
@@ -95,7 +95,7 @@ if __name__ == "__main__":
 			mobility_p, conductivity_p, thermopower_p = find_properties(p_type_folder + '/aMoBT_output.txt', float(args.n), float(args.T))
 			m_e, m_h = find_effective_mass(n_type_folder + '/log.out')
 			os.chdir(swd)
-			stat.write('%30s%12s%12.2f%12.2f %10.2f%10.2f%10.2f%10.2f%9.4f%9.4f\n' % (c_path, formula, mobility_n, conductivity_n, thermopower_n, mobility_p, conductivity_p, thermopower_p, m_e, m_h))
+			stat.write('%30s%12s%12.2f%12.2f %10.2f%7.2f%10.2f%10.2f%10.2f%7.2f%9.4f%9.4f\n' % (c_path, formula, mobility_n, conductivity_n, thermopower_n, conductivity_n*thermopower_n**2/1e6, mobility_p, conductivity_p, thermopower_p, conductivity_p*thermopower_p**2/1e6, m_e, m_h))
 		else:
 			stat.write('%30s%12s\n' % (c, 'N.A.'))
 #			mpstart = c.find('mp-')
@@ -105,3 +105,5 @@ if __name__ == "__main__":
 	stat.close()
 	rem.close()
 	print('\nDONE! see status.txt and remaining.txt')
+	print('Number of entries {0}'.format(len(clist)))
+	print('Number of unique IDs {0}'.format(len(set(clist))))
