@@ -112,6 +112,7 @@ def prepare_files_and_submit(aMoBT_path, T_array, n_array, Bgap, LO_phonon, stat
 	os.system('rm *')
 	os.system('cp ' + aMoBT_path + '* .')
 	os.system('rm e_matlab* log.out')
+	os.system('rm EIGENVAL* PROCAR* OUTCAR* DOSCAR*')
 	os.system('cp ../nself_aMoBT/EIGENVAL .')
 	if os.path.exists('../p_nself_aMoBT'):
 		os.system('cp ../p_nself_aMoBT/EIGENVAL EIGENVAL_p')
