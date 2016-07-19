@@ -81,76 +81,17 @@ if __name__ == "__main__":
 	scripts_path = '~/dekode/'
 	potcar_path = '/cluster/caml/vasp-pot/PBE/'
 
-	list1 = ['mp-5966', 'mp-22598', 'mp-19803', 'mp-29213', 'mp-22323', 'mp-22189', 'mp-31132', 'mp-8275', 'mp-13334', 'mp-3443', 'mp-3810', 'mp-16281']
-	list2 = ['mp-3188', 'mp-1243', 'mp-504908', 'mp-29297', 'mp-566788', 'mp-10913', 'mp-28931', 'mp-13803', 'mp-5794', 'mp-8285', 'mp-3917', 'mp-19148']
-	list3 = ['mp-1705', 'mp-30284', 'mp-886', 'mp-25178', 'mp-27175', 'mp-540728', 'mp-5280', 'mp-19006', 'mp-3056', 'mp-7534']
-	list4 = ['mp-8922', 'mp-7762', 'mp-13820', 'mp-20546', 'mp-27843', 'mp-540688', 'mp-27563', 'mp-8086', 'mp-25014', 'mp-19321']
-	list5 = ['mp-7831', 'mp-16293', 'mp-3653', 'mp-29910', 'mp-29455', 'mp-25043', 'mp-10486', 'mp-5909', 'mp-22937', 'mp-29606', 'mp-2951'] 
-	list6 = ['mp-4590', 'mp-541368', 'mp-27684', 'mp-22734', 'mp-7461', 'mp-20337', 'mp-23419']
-	list7 = ['mp-5380', 'mp-7863', 'mp-8624', 'mp-3744', 'mp-7502', 'mp-1346', 'mp-20694', 'mp-761872']
-	sarmandi = ['mp-7233', 'mp-4764']    # X2SeO2, X= La, Pr, Nd, Gd
-	zero_gaps = ['mp-13971', 'mp-2045']    # X2SeO2, X=  Pr, Nd, Gd mp-19079 (zero-gap even on MP)
-	pTCO_SI_list1 = ['mp-28962', 'mp-13060', 'mp-617']
-	pTCO_SI_list2 = ['mp-5709', 'mp-18288', 'mp-28711', 'mp-23487'] 
-	pTCO_SI_list3 = ['mp-25726', 'mp-3370', 'mp-4086', 'mp-2931', 'mp-17559', 'mp-8111']
-	TE1 = ['mp-22619', 'mp-486', 'mp-555818', 'mp-2074', 'mp-7955', 'mp-991676', 'mp-9295', 'mp-991652']  # NiP2, NiP2, SiCu2PbS4, Li3Sb, Li3Sb, (Nb-Ta-V)Cu3Te4
-
-	famous = ['mp-2133', 'mp-3163', 'mp-22598', 'mp-22323', 'mp-644741'] # 			ZnO, BaSnO3, 3_In2O3 
-	famous1= ['mp-856', 'mp-550172', 'mp-755071', 'mp-545544', 'mp-23092', 'mp-552200']  #  3_SnO2, 3_Ba2TaBiO6
-	missed = ['mp-5966', 'mp-22598', 'mp-19803', 'mp-29213', 'mp-14243', 'mp-22189', 'mp-8275', 'mp-13334', 'mp-3443', 'mp-3810', 'mp-16281','mp-566788','mp-19321','mp-22189']
-#	excluded_first_pass = ['mp-510309', 'mp-22606', 'mp-505501']	# NONE OF THESE COULD BE READ FROM MATERIALSPROJECT
-#	566788: n cannot be obtained in aMoBT!
-	famous_p = ['mp-10695', 'mp-560588', 'mp-3748', 'mp-3098', 'mp-4979']	# ZnS_2, CuAlO2_2, CuAlS2
-	famous_p_2 = ['mp-5970', 'mp-4255', 'mp-19281', 'mp-19357', 'mp-18841']	# BaCu2S2_2, SrxLa1-xCrO3_3
-
-	halides_1 = ['mp-22922', 'mp-22914', 'mp-22913', 'mp-32880','mp-614013', 'mp-616378', 'mp-568570', 'mp-2068']   # p: AgCl, CuCl, CuBr_2  n: CsSnI3_3, RhF3
-#	some_exp_TCOs = ['mp-2097', 'mp-4651', 'mp-19281', 'mp-510625', 'mp-505562', 'mp-505562', 'mp-13900', 'mp-1132', 'mp-2879', 'mp-552488', 'mvc-6068', 'mp-2691', 'mp-672', 'mp-570136']	
-	some_exp_TCOs = ['mp-2097', 'mp-4651', 'mp-19281', 'mp-510625', 'mp-505562', 'mp-505562', 'mp-13900', 'mp-1132', 'mp-2879', 'mvc-6068', 'mp-2691', 'mp-672']	
-#	some_exp_TCOs = SnO, 		SrTiO3, LaCrO3, 	CuCrO2, CuCrO2, 	CuGaO2, SrCu2O2, 	CdO, SrSnO3, 	LaCuOSe, 	Co1.92Zn1.08O4,	CdSe, 	CdS,	CuI
-
-#	TE_exp_1 = ['mp-2168', 'mp-1379', 'mp-1883', 'mp-1861', 'mp-22297', 'mp-568889', 'mp-22856'] 
-#			SnSe	SnS	SnTe		Cu2Te	Cu2Se		Ag2Se	Bi2S3
-	TE_exp_2 = ['mp-541837','mp-568390','mp-542625','mp-54262', 'mp-17667','mp-12275','mp-29938','mp-17985','mp-2343','mp-649033','mp-7431']
-#			Bi2Se3	Bi2Te3		Sr3GaSb3 Sr3Ga0.93Zn0.07S Sr3AlSb3 SrZnSb2 BaGa2Sb2 Ca5Ga2Sb6	Mg2Sn	Sr5In2Sb6	SrZn2Sb2
-
-        new_TEs_1 = ['mp-18300', 'mp-924129', 'mp-1367', 'mp-21276', 'mp-2231', 'mp-34202', 'mp-34361', 'mp-1317', 'mp-691', 'mp-2201', 'mp-1201']
-                        #  Ca3AlSb3     ZrNiSn      Mg2Si	PbS             SnS     Bi2Te3    Tl9BiTe6	CoSb3    SnSe           PbSe    Sb2Te3
-
-
-#	some_exp_TCOs = some_exp_TCOs - 'mp-552488'
-#	some_exp_TCOs = some_exp_TCOs - 'mp-570136'
-
-
-# mp-21905, mp-3331 and mp-29047 don't exist on MP website
-	so_list = ['mp-8298', 'mp-8299', 'mp-7787', 'mp-19845', 'mp-8789', 'mp-3519']
-#	materials_list = list1 + list2 + list3 + list4 + list5 + list6 + list7
-	materials_list = list2 + list3 + list4 + list5 + list6 + list7 + sarmandi + pTCO_SI_list1 + pTCO_SI_list2 + pTCO_SI_list3 + so_list + zero_gaps + famous + famous1
-
-#	materials_list = ['mp-569522'] # MnP4
-#	materials_list = ['mp-16764']  # RbYTe2
-#	materials_list = ['mp-16763']  # KYTe2
-#	materials_list = ['mp-945184'] # YCyTe2
-#	materials_list = ['mp-12953']  # TmAgTe2
-#	materials_list = ['mp-4753']  # Al2SiO5
-#	materials_list = ['mp-487', 'mp-14587' ,'mp-570553']  # MnP4, ZnP4, FeP4
-#	materials_list = ['mp-7623']  # MgAs4 
-#	materials_list = ['mp-7904']  # CdP4 
-#	materials_list = ['mp-384']  # MgP4 
-#	materials_list = ['mp-19717']  # PbTe
-#	materials_list = sarmandi
-#	materials_list = ['mp-7541']  # SnP3
-#	materials_list = pTCO_SI_list3
-#	materials_list = ['mp-640889']  # TmCu3Te3
-	occasional_TEs = ['mp-569522', 'mp-16764', 'mp-16763', 'mp-945184', 'mp-12953', 'mp-4753', 'mp-487', 'mp-14587' ,'mp-570553', 'mp-7623', 'mp-7904', 'mp-384', 'mp-19717', 'mp-7541', 'mp-640889']
-#	materials_list = occasional_TEs + TE1
-
+	list = [
+	'mp-628643',
+	'mp-605863'
+	]
 	SOC = False
 
 	parser = argparse.ArgumentParser()
 	parser.add_argument("-pa","--mp_id", help="The Materials Project ID", required = False)
 	args = parser.parse_args()
 
-	run_dekode_for(['mp-28166','mp-382','mp-30055'], potcar_path, amobt_path, scripts_path, GEOM = True, SELF = True, NSELF = True, \
+	run_dekode_for(list, potcar_path, amobt_path, scripts_path, GEOM = True, SELF = True, NSELF = True, \
 	NSELF_AMOBT = True, DIEL = True, PHONON = True, DEFORM = True, AMOBT = True, SOC = False, computer = 'partita')
 
 #	run_dekode_for(some_exp_TCOs, potcar_path, amobt_path, scripts_path, GEOM = False, SELF = False, NSELF = False, \
