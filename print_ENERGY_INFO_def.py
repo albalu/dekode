@@ -60,7 +60,10 @@ if __name__ == "__main__":
 	                            if line[0]=='volume':
 	                            	vol = float(line[4])
 	                            elif line[0]=='free':
-       	                            	TOTEN = float(line[4])
+					try:
+       	                            	    TOTEN = float(line[4])
+					except:
+					    TOTEN = 0
 			enfo.write('%15d %15.4f %15.4f %15.4f %15.4f %15.4f \n' % (i, vol, TOTEN, core, eval, econ))
 			os.chdir("../")	
 
