@@ -74,7 +74,7 @@ if __name__ == "__main__":
 	rem = open('remaining.txt', 'w')
 	stat.write('n={} T={}\n'.format(str(args.n), str(args.T)))
 	rem.write('n={} T={}\n'.format(str(args.n), str(args.T)))
-	stat.write('%30s%12s%12s%12s %10s%7s%10s%10s%10s%7s%9s%9s\n' % ('location of mp-id (if any)', 'formula', 'mu-cm2/V.s', 'sigma-S/cm', 'S-uV/K', 'PF', 'p_mu', 'p_sigma', 'p_S', 'p_PF', 'm_e', 'm_h'))
+	stat.write('%30s%12s%12s%12s %10s%7s%10s%10s%10s%7s%9s%9s\n' % ('location_of_mp-id_if-any', 'formula', 'mu-cm2/V.s', 'sigma-S/cm', 'S-uV/K', 'PF', 'p_mu', 'p_sigma', 'p_S', 'p_PF', 'm_e', 'm_h'))
 	for c in clist:
 		if ":" in c:
 			stat.write(c + "\n")

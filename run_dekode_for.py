@@ -55,24 +55,25 @@ False, DIEL = False, PHONON = False, DEFORM = False, AMOBT = False, SOC = False,
 			os.system('mkdir SOC')
 		os.chdir('SOC')
 	for id in materials_list:
-		os.system('mkdir ' + id) 
-                if not os.path.exists('dekode.py'):
-                        os.system('%s %s%s %s' % ('cp', scripts_path, 'dekode.py', id))
-                else:
-                        os.system('cp dekode.py ' + id)
-                if not os.path.exists(computer + '.sh'):
-                        os.system('%s %s%s %s' % ('cp', scripts_path, computer + '.sh', id))
-                else:
-                        os.system('cp ' + computer + '.sh ' + id)
-                if not os.path.exists('vasp-*'):
-                        os.system('cp ~/vasp-ib2.csh ' + id)
-                else:
-                        os.system('cp vasp* ' + id)
-		os.chdir(id)
-		make_input(potcar_path, amobt_path, scripts_path, id, GEOM, SELF, NSELF, NSELF_AMOBT, DIEL, PHONON, DEFORM, AMOBT, SOC, computer)
-		os.system('rm python_job.*')
-		os.system('qsub partita.sh')
-		os.chdir('../')
+		if not os.path.exists(id):
+			os.system('mkdir ' + id) 
+                	if not os.path.exists('dekode.py'):
+                	        os.system('%s %s%s %s' % ('cp', scripts_path, 'dekode.py', id))
+                	else:
+                	        os.system('cp dekode.py ' + id)
+                	if not os.path.exists(computer + '.sh'):
+                	        os.system('%s %s%s %s' % ('cp', scripts_path, computer + '.sh', id))
+                	else:
+                	        os.system('cp ' + computer + '.sh ' + id)
+                	if not os.path.exists('vasp-*'):
+                	        os.system('cp ~/vasp-ib2.csh ' + id)
+                	else:
+                	        os.system('cp vasp* ' + id)
+			os.chdir(id)
+			make_input(potcar_path, amobt_path, scripts_path, id, GEOM, SELF, NSELF, NSELF_AMOBT, DIEL, PHONON, DEFORM, AMOBT, SOC, computer)
+			os.system('rm python_job.*')
+			os.system('qsub partita.sh')
+			os.chdir('../')
 
 if __name__ == "__main__":
 	
@@ -83,7 +84,8 @@ if __name__ == "__main__":
 
 	list = [
 	'mp-628643',
-	'mp-605863'
+	'mp-605863',
+	'mp-568088'	# Yb14MnSb11
 	]
 	SOC = False
 
