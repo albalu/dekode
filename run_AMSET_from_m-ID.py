@@ -13,16 +13,19 @@ from pymongo import MongoClient
 db = MongoClient(host="localhost", port=57017)["aj_thermoelectrics"]
 print db.authenticate("CaptAmerica", "VibraniumSteel")
 
-id_list = ["m-529"]
+id_list = ["m-4884", "m-3135", "m-1011"]
 
 for id in id_list:
     comp = db.materials.find_one({"material_id": id})
-    if os.path.exists(comp["formula_pretty"]):
-        print("The folder {} already exists".format(comp["formula_pretty"]))
+    folder_name = comp["formula_pretty"].replace("(", "_")
+    folder_name = folder_name.replace(")", "_")
+
+    if os.path.exists(folder_name):
+        print("The folder {} already exists".format(folder_name))
         continue
     else:
-        os.system("cp -r initial " + comp["formula_pretty"])
-        os.chdir(comp["formula_pretty"])
+        os.system("cp -r initial " + folder_name)
+        os.chdir(folder_name)
 
     st = comp["structure"]
     s = Structure.from_dict(st)
@@ -43,5 +46,5 @@ for id in id_list:
             kpts = kpoints,
             labels = labels,
             ).write_file("KPOINTS_NSELF")
-#    os.system("qsub partita.sh")
+    os.system("qsub partita.sh")
     os.chdir("../")

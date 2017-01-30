@@ -37,7 +37,7 @@ def generate_aMoBT_input(type, T_array, n_array, Bgap, LO, static, high, free_e 
 
 		
 		indata.write('%s %f; \n' % ('Bgap =', Bgap))
-		if Bgap < 1:
+		if Bgap < 0.1:
 			indata.write('%s %f; \n' % ('Bgap =', 1))
 		
 	return
@@ -85,22 +85,33 @@ def find_reference(scripts_path):
 
 def get_me_dielectrics(filename, LO_phonon, TO_phonon):
 	count = 0
+	total = 0
+	lfe = 0 # local field effect: this is to avoid double counting epsilon with lfe as there are duplicates in OUTCAR
 	with open(filename, "rU") as f:
 		for line in f:
        	                count = count + 1
        	                lin = line.split()
        	                if len(lin) > 2:
-       	                        if lin[0] == "MACROSCOPIC" and lin[4] == "(including":
+       	                        if (lin[0] == "MACROSCOPIC" and lin[4] == "(including" and lfe == 0) or (lin[0] == "MACROSCOPIC" and lin[4] == "IONIC"):
        	                                count = -5
+					lfe += 1
        	                if count == -3:
-       	                        x = float(lin[0])
+				if lfe == 1:
+	       	                        x = float(lin[0])
+				total += float(lin[0])
        	                elif count == -2:
-       	                        y = float(lin[1])
+       	                        if lfe == 1:
+					y = float(lin[1])
+				total += float(lin[1])
        	                elif count == -1:
-       	                        z = float(lin[2])
+				if lfe == 1:
+	       	                        z = float(lin[2])
+				total += float(lin[2])
        	                        count = 0
-	static_dielectric = (x + y + z)/3
-	highf_dielectric = static_dielectric * (TO_phonon/LO_phonon)**2
+#	static_dielectric = (x + y + z)/3
+	static_dielectric = total/3
+	highf_dielectric = (x + y + z)/3
+#	highf_dielectric = static_dielectric * (TO_phonon/LO_phonon)**2
 	return static_dielectric, highf_dielectric
 
 def prepare_files_and_submit(aMoBT_path, T_array, n_array, Bgap, LO_phonon, static, highf, free_e, E_deformation_n, E_deformation_p, kcbm, kvbm):

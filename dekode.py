@@ -28,6 +28,7 @@ import json as jsonlib
 import pymatgen as mp
 from pymatgen.symmetry.bandstructure import HighSymmKpath
 
+soc_NBANDS = 224
 
 ########### READ SETTINGS FROM MIKECAR ############
 # The default settings are to run just the geom, self, and nself steps
@@ -115,7 +116,10 @@ if not scripts_path.endswith('/'):
 ####################################
 
 os.system('cp ' + scripts_path + 'run_aMoBT.py .')
-os.system('cp ' + scripts_path + 'find_eval_eband.m .')
+#if SOC in ['TRUE', 'True', 'true', 't', 'T']:
+#	os.system('cp ' + scripts_path + 'find_eval_eband_soc.m .')
+#else:
+#	os.system('cp ' + scripts_path + 'find_eval_eband.m .')
 from run_aMoBT import generate_aMoBT_input
 from run_aMoBT import find_reference
 
@@ -293,11 +297,11 @@ def get_INCARs(comp_name, mp_api_key, SOC):
     indic = v.get_incar(structure)
     k = v.get_all_vasp_input(structure,generate_potcar = False)
     incar_file = open('INCAR','w')
-    if SOC in ['TRUE', 'True', 'true']:
-	indic['LMAXMIX'] = 4
-	indic['NBANDS'] = 128
-	indic['LSORBIT'] = '.TRUE.'
-	indic.pop('MAGMOM', None)
+#    if SOC in ['TRUE', 'True', 'true']:
+#	indic['LMAXMIX'] = 4
+#	indic['NBANDS'] = soc_NBANDS
+#	indic['LSORBIT'] = '.TRUE.'
+#	indic.pop('MAGMOM', None)
     incar_file.write(str(indic))
 
     self = MPStaticVaspInputSet()
@@ -306,7 +310,7 @@ def get_INCARs(comp_name, mp_api_key, SOC):
     incar_file = open('INCAR_SELF','w')
     if SOC in ['TRUE', 'True', 'true']:
 	indic['LMAXMIX'] = 4
-	indic['NBANDS'] = 128
+	indic['NBANDS'] = soc_NBANDS
 	indic['LSORBIT'] = '.TRUE.'
 	indic.pop('MAGMOM', None)
     incar_file.write(str(indic))
@@ -317,7 +321,7 @@ def get_INCARs(comp_name, mp_api_key, SOC):
     incar_file = open('INCAR_NSELF','w')
     if SOC in ['TRUE', 'True', 'true']:
 	indic['LMAXMIX'] = 4
-	indic['NBANDS'] = 128
+	indic['NBANDS'] = soc_NBANDS
 	indic['LSORBIT'] = '.TRUE.'
 	indic.pop('MAGMOM', None)
     incar_file.write(str(indic))
@@ -327,7 +331,7 @@ def get_INCARs(comp_name, mp_api_key, SOC):
     incar_file = open('INCAR_HSE','w')
     if SOC in ['TRUE', 'True', 'true']:
 	indic['LMAXMIX'] = 4
-	indic['NBANDS'] = 128
+	indic['NBANDS'] = soc_NBANDS
 	indic['LSORBIT'] = '.TRUE.'
 	indic.pop('MAGMOM', None)
     incar_file.write(str(indic))
@@ -361,10 +365,10 @@ def writeINCARgeom(SOC = 'False'):
     h.write("NSW = 99\n")
     h.write("PREC = Accurate\n")
     h.write("SIGMA = 0.2\n")
-    if SOC in ['TRUE', 'True', 'true']:
-	h.write('LMAXMIX = 4\n')
-	h.write('NBANDS = 128\n')
-	h.write('LSORBIT = .TRUE.')
+#    if SOC in ['TRUE', 'True', 'true']:
+#	h.write('LMAXMIX = 4\n')
+#	h.write('NBANDS = {}\n'.format(str(soc_NBANDS)))
+#	h.write('LSORBIT = .TRUE.')
     h.close()
 
 def writeINCARself(SOC = 'False'):
@@ -387,7 +391,7 @@ def writeINCARself(SOC = 'False'):
     h.write("SIGMA = 0.2\n")
     if SOC in ['TRUE', 'True', 'true']:
 	h.write('LMAXMIX = 4\n')
-	h.write('NBANDS = 128\n')
+	h.write('NBANDS = {}\n'.format(str(soc_NBANDS)))
 	h.write('LSORBIT = .TRUE.')
     h.close()
 
@@ -406,9 +410,10 @@ def writeINCARnself(SOC = 'False'):
     h.write("NELM = 100\n")
     h.write("NSW = 0\n")
     h.write("PREC = Normal\n")
+    h.write("NCORE = 8\n")
     if SOC in ['TRUE', 'True', 'true']:
 	h.write('LMAXMIX = 4\n')
-	h.write('NBANDS = 128\n')
+	h.write('NBANDS = {}\n'.format(str(soc_NBANDS)))
 	h.write('LSORBIT = .TRUE.')
     h.close()
 
@@ -456,7 +461,7 @@ if os.path.isfile("vasp-ib.csh")==True:
         y = "vasp-ib.csh"
 if os.path.isfile("vasp-mpi.csh")==True:
         y = "vasp-mpi.csh"
-if SOC in ['TRUE', 'True', 'true']:
+if SOC in ['TRUE', 'True', 'true'] and geom not in ['t', 'T', 'TRUE', 'True', 'true']:
 	os.system('cp ~/vasp53_spin-orbit-coupling.mpi .')
 	y = 'vasp53_spin-orbit-coupling.mpi'
 
@@ -480,7 +485,6 @@ if poscar == "default":
         mp.io.vasp.inputs.Kpoints.write_file(geom_kpoints,'KPOINTS')
 
     if nself in ['t', 'T', 'TRUE', 'True', 'true']:
-
         nself_kpoints = mp.io.vasp.inputs.Kpoints.automatic_linemode(20,mp.symmetry.bandstructure.HighSymmKpath(structure, symprec=0.01, angle_tolerance=5))
         mp.io.vasp.inputs.Kpoints.write_file(nself_kpoints,'KPOINTS_NSELF')
 
@@ -556,28 +560,24 @@ if nself in ['t', 'T', 'TRUE', 'True', 'true']:
 	replace('INCAR_NSELF', 'INCAR_NSELF', 'NBANDS = 100', '')
         os.system("mv INCAR_NSELF INCAR")
     
-    
-    # Rename KPOINTS_NSELF to KPOINTS so vasp can read it, and retreive the needed files from the self directory
     os.system('cp ./self/POSCAR .')
     os.system('cp ./self/POTCAR .')
     os.system('cp ./self/CHG* .')
 
     # Make a directory for the files involved with the  non-self consistent calcuations
     os.system("mkdir nself")
-    if os.path.exists('KPOINTS_nself'):
-	os.system('mv KPOINTS_nself KPOINTS_NSELF')
-    try:
-    	with open('KPOINTS_NSELF','r') as atest:
-		pass
-    except IOError:
-		raise IOError('KPOINTS_NSELF (line-mode) must be present for the band structure (nself) calculation')
 
-    os.system('mv KPOINTS_NSELF nself/KPOINTS')
+    # Rename KPOINTS_NSELF to KPOINTS so vasp can read it, and retreive the needed files from the self directory
+    if os.path.exists('KPOINTS_NSELF'):	
+	os.system('mv KPOINTS_NSELF nself/KPOINTS')
+    else:
+	raise IOError('KPOINTS_NSELF (line-mode) must be present for the band structure (nself) calculation')
+
     os.system("cp "+y+" nself/")
     os.system("mv POSCAR POTCAR INCAR CHG* nself/")
 
     os.chdir("nself/")
-    Ksplit()
+#    Ksplit()
 
     # Run the non-self consistent calculations
     run_vasp(computer, y)
@@ -596,7 +596,10 @@ if nself_aMoBT in ['t', 'T', 'TRUE', 'True', 'true']:
     os.system("cp " + scripts_path +  "KPOINTS_generator_for_aMoBT.m .")
     if os.path.exists('nself/EIGENVAL'):
 	    os.system("cp nself/EIGENVAL .")
-	    val_kpoint, con_kpoint, eval, econ, core = find_reference(scripts_path)
+	    if SOC in ['TRUE', 'True', 'true', 't', 'T']:
+		val_kpoint, con_kpoint, eval, econ, core = find_reference(scripts_path, SOC=True)
+	    else:
+		val_kpoint, con_kpoint, eval, econ, core = find_reference(scripts_path)
 	    replace("KPOINTS_generator_for_aMoBT.m","KPOINTS_generator_for_aMoBT.m","0 0 0", con_kpoint)
 
     os.system("octave -q KPOINTS_generator_for_aMoBT.m")
@@ -625,10 +628,11 @@ if nself_aMoBT in ['t', 'T', 'TRUE', 'True', 'true']:
     run_vasp(computer, y)
 
 
-    if os.path.exists('nself/EIGENVAL'):
+    if os.path.exists('../nself/EIGENVAL'):
     	if val_kpoint != con_kpoint:
 		os.chdir("../")
-		replace("KPOINTS_generator_for_aMoBT.m","KPOINTS_generator_for_aMoBT.m", con_kpoint, val_kpoint)
+		os.system("cp " + scripts_path +  "KPOINTS_generator_for_aMoBT.m .")
+		replace("KPOINTS_generator_for_aMoBT.m","KPOINTS_generator_for_aMoBT.m", "0 0 0", val_kpoint)
 		os.system("octave -q KPOINTS_generator_for_aMoBT.m")
 		os.system('cp -r nself_aMoBT p_nself_aMoBT')
 		os.system('mv KPOINTS_aMoBT p_nself_aMoBT/KPOINTS')
@@ -927,7 +931,10 @@ if aMoBT in ['t', 'T', 'TRUE', 'True', 'true']:
 
 	from run_aMoBT import run_aMoBT_on_dekode_results
 #	run_aMoBT_on_dekode_results(scripts_path, aMoBT_path)	
-	run_aMoBT_on_dekode_results(scripts_path, aMoBT_path, T_array = '[150 200 250 300 350 400 450 500 550 600 650 700 750 800]', n_array = '[1e17 1e18 1e19 1e20 1e21]', free_e = 'both')
+	if SOC in ['TRUE', 'True', 'true', 't', 'T']:
+		run_aMoBT_on_dekode_results(scripts_path, aMoBT_path, T_array = '[150 200 250 300 350 400 450 500 550 600 650 700 750 800]', n_array = '[1e18 1e19 1e20 1e21]', free_e = 'both', SOC=True)
+	else:
+		run_aMoBT_on_dekode_results(scripts_path, aMoBT_path, T_array = '[150 200 250 300 350 400 450 500 550 600 650 700 750 800]', n_array = '[1e18 1e19 1e20 1e21]', free_e = 'both')
 
 ##############################################################################################################################
 

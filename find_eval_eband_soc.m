@@ -7,7 +7,7 @@
 function [core,eval,val_kpoint,econ,con_kpoint] = find_eval_eband(filename, spinorbit)
 	ispin = 0;
 	if nargin < 2
-	    spinorbit = 0;
+	    spinorbit = 1;
 	end
 	if nargin < 1
 	    filename = "EIGENVAL";
